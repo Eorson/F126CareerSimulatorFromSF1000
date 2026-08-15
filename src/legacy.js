@@ -2932,28 +2932,30 @@ function normalizeLoadedState(savedState, fallbackState = {}) {
     return incoming;
   }
   // 如果没有加载状态，使用备用状态
+  const incoming = deepCloneForSave(savedState || {});
   const fallback = deepCloneForSave(fallbackState || {});
-  if (!Array.isArray(fallback.history)) fallback.history = [];
-  if (!Array.isArray(fallback.seasonResults)) fallback.seasonResults = [];
-  if (
-    !fallback.driverStandings ||
-    typeof fallback.driverStandings !== "object"
-  ) {
-    fallback.driverStandings = {};
+  const merged = {
+    ...fallback,
+    ...incoming,
+  };
+  merged.driverStandings = {
+    ...deepCloneForSave(fallback.driverStandings || {}),
+    ...deepCloneForSave(incoming.driverStandings || {}),
+  };
+  merged.teamStandings = {
+    ...deepCloneForSave(fallback.teamStandings || {}),
+    ...deepCloneForSave(incoming.teamStandings || {}),
+  };
+  merged.driverSeasonStats = {
+    ...deepCloneForSave(fallback.driverSeasonStats || {}),
+    ...deepCloneForSave(incoming.driverSeasonStats || {}),
+  };
+  if (!Array.isArray(merged.history)) merged.history = [];
+  if (!Array.isArray(merged.seasonResults)) merged.seasonResults = [];
+  if (!merged.weekend || typeof merged.weekend !== "object") {
+    merged.weekend = deepCloneForSave(fallback.weekend || {});
   }
-  if (!fallback.teamStandings || typeof fallback.teamStandings !== "object") {
-    fallback.teamStandings = {};
-  }
-  if (
-    !fallback.driverSeasonStats ||
-    typeof fallback.driverSeasonStats !== "object"
-  ) {
-    fallback.driverSeasonStats = {};
-  }
-  if (!fallback.weekend || typeof fallback.weekend !== "object") {
-    fallback.weekend = {};
-  }
-  return fallback;
+  return merged;
 }
 function snapshot() {
   // 确保所有关键字段在保存前存在并有效
