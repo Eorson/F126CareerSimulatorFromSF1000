@@ -1,0 +1,846 @@
+<!doctype html>
+<!-- 
+  F1 26 Career Simulator BETA
+  
+  这是一个F1 2026赛季职业生涯模拟游戏
+  
+  项目概述：
+  - 允许玩家作为任何2026赛季的真实F1车手进行职业生涯模拟
+  - 玩家需要管理研发预算、与队友和队伍的关系、训练准备
+  - 在每场比赛周末做出战术和策略决定
+  - 完整的2026赛季（23场大奖赛）
+  
+  主要功能模块：
+  1. 主页 (home) - 游戏菜单
+  2. 设置 (settings) - 显示和偏好设置
+  3. 车手选择 (modal) - 选择2026年的车手
+  4. 车手档案 (profile) - 显示选定车手的详细信息
+  5. 生涯中心 (career) - 主要游戏界面
+  6. 开发中心 (development) - 赛车研发管理
+  7. 媒体互动 (media) - 与队伍和其他车手的关系管理
+  8. 比赛周末 (race) - 比赛模拟系统
+-->
+<html lang="zh-CN">
+  <head>
+    <!-- 文档配置 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#e10600" />
+    <!-- F1 红色主题 -->
+    <title>F1 26 Career Simulator BETA</title>
+
+    <!-- 样式文件 -->
+    <link rel="stylesheet" href="./src/style.css" />
+
+    <!-- Vue 3 框架 (用于前端应用) -->
+    <script src="https://unpkg.com/vue@3.5.18/dist/vue.global.prod.js"></script>
+  </head>
+  <body>
+    <!-- 应用根容器 -->
+    <div id="app">
+      <!-- 顶部导航栏 -->
+      <header class="top">
+        <!-- 游戏logo - 点击返回首页 -->
+        <div
+          class="logo"
+          id="homeLogo13286"
+          onclick="showView('home')"
+          role="button"
+          tabindex="0"
+          title="返回首页"
+        >
+          F1 <span>26</span> SIMULATOR
+        </div>
+        <!-- 右侧显示当前赛季信息 -->
+        <div class="topright">2026 CAREER MODE · FULL SEASON</div>
+      </header>
+      <!-- 
+        主视图容器 - 包含所有页面/屏幕
+        通过 showView() 函数切换不同的视图
+      -->
+
+      <!-- 主页视图 - 游戏菜单 -->
+      <section class="view active" id="home">
+        <div class="wrap homegrid">
+          <div class="hero">
+            <!-- 游戏标题和简介 -->
+            <div class="kicker">FORMULA 1 · CAREER SIMULATION</div>
+            <h1>YOUR GRID.<br />YOUR ERA.</h1>
+            <p>
+              从 2026
+              赛季第一站开始完整模拟你的职业生涯。研发赛车、维持状态、经营围场关系，并在比赛周末亲自决定赛季走向。
+            </p>
+
+            <!-- 菜单项 - 游戏主要功能入口 -->
+            <!-- 继续生涯 (读取自动存档) -->
+            <div
+              class="menuitem resume"
+              id="resumeCareer"
+              onclick="loadAutosave()"
+            >
+              <b>继续上次生涯</b><span id="resumeText">读取自动存档</span>
+            </div>
+
+            <!-- 新建生涯 - 选择真实车手 -->
+            <div class="menuitem" onclick="openDriverSelect()">
+              <b>真实车手生涯</b><span>选择 2026 围场车手，可开启传奇替换</span>
+            </div>
+
+            <!-- 自定义车手生涯 -->
+            <div class="menuitem">
+              <b>自定义车手生涯</b
+              ><span>自定车手、队友、研发预算与赛车六项性能</span>
+            </div>
+
+            <!-- 存档管理 -->
+            <div class="menuitem" onclick="openSaveManager('load')">
+              <b>读取存档</b><span>打开手动存档槽</span>
+            </div>
+
+            <!-- 游戏设置 -->
+            <div class="menuitem" onclick="openSettingsV13286()">
+              <b>设置</b><span>车手姓名显示与界面偏好</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 设置视图 -->
+      <section class="view" id="settings">
+        <div class="wrap">
+          <div class="modulehead settingsHead13286">
+            <div>
+              <div class="kicker">SETTINGS</div>
+              <h1>设置</h1>
+            </div>
+            <button class="btn" onclick="showView('home')">← 返回首页</button>
+          </div>
+          <!-- 显示设置卡片 -->
+          <div class="card settingsPanel13286">
+            <div class="settingsTitle13286">
+              <div>
+                <div class="kicker">DISPLAY</div>
+                <h2>显示设置</h2>
+              </div>
+              <div class="settingsBadge13286">UI</div>
+            </div>
+            <!-- 车手姓名语言切换 - 中文/英文 -->
+            <div class="settingRow13285">
+              <div>
+                <b>车手姓名显示</b
+                ><span
+                  >只改变界面显示，不改变存档中的车手
+                  ID、积分记录与转会匹配。</span
+                >
+              </div>
+              <div class="nameLangSwitch13285">
+                <button
+                  class="active"
+                  id="nameLangZh13285"
+                  onclick="setDriverNameLanguageV13285('zh')"
+                >
+                  中文
+                </button>
+                <button
+                  id="nameLangEn13285"
+                  onclick="setDriverNameLanguageV13285('en')"
+                >
+                  English
+                </button>
+              </div>
+            </div>
+            <div class="settingsNote13285">
+              积分榜、全部车队、车手档案、F2车手库、比赛结果以及转会 /
+              退役大新闻会统一使用这里的姓名设置。
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="profile">
+        <div class="wrap">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 12px;
+            "
+          >
+            <div class="kicker">DRIVER PROFILE</div>
+            <button class="btn" onclick="showView('home')">← 主菜单</button>
+          </div>
+          <div class="profilebox">
+            <div class="profiletitle">
+              <div>
+                <div class="drivername" id="pname"></div>
+                <span class="tag" id="pteam"></span>
+              </div>
+              <div class="year">CAREER START<b>2026</b></div>
+            </div>
+            <div class="profileDriverOnly">
+              <h2 class="sectiontitle">车手能力</h2>
+              <div id="driverAttrs"></div>
+            </div>
+            <div class="profileactions">
+              <button class="btn" onclick="openCalendar()">
+                查看 2026 赛历</button
+              ><button class="btn primary" onclick="startCareer()">
+                开始 2026 生涯 →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="career">
+        <div class="wrap">
+          <div class="careerHeader">
+            <div>
+              <div class="kicker">2026 DRIVER CAREER</div>
+              <h1>赛季总部</h1>
+            </div>
+            <div>
+              <div class="seasoninfo small">
+                当前时间<b id="hubDate">ROUND 01 · 澳大利亚</b>完整赛季 · 23站
+              </div>
+              <div class="careerTools">
+                <button
+                  class="mini seasonShortcutV17"
+                  onclick="openModule('season')"
+                >
+                  积分榜</button
+                ><button class="mini" onclick="quickSave()">快速存档</button
+                ><button class="mini" onclick="openSaveManager('save')">
+                  存档</button
+                ><button class="mini fullSeasonSimBtn">模拟完整赛季</button
+                ><button class="mini" onclick="openSaveManager('load')">
+                  读档
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="hubtop">
+            <div class="card driverhubclick" onclick="openCareerDriverDetail()">
+              <div class="drivercard">
+                <div>
+                  <h2 id="hubDriver"></h2>
+                  <div class="small" id="hubTeam"></div>
+                </div>
+                <div>
+                  <div class="small">DRIVER OVR</div>
+                  <div class="big" id="hubOvr"></div>
+                </div>
+              </div>
+              <div class="driverstats" id="hubDriverStats"></div>
+            </div>
+            <div class="card">
+              <div class="small">研发预算</div>
+              <div class="big money" id="hubBudget"></div>
+              <div class="small">不同车队初始预算不同</div>
+            </div>
+            <div class="card nextRace">
+              <div class="small">下一场大奖赛</div>
+              <b id="nextRace"></b>
+              <div class="small" id="nextDate"></div>
+              <div class="progressline"><div style="width: 4%"></div></div>
+            </div>
+          </div>
+          <div class="hubPaddock" id="hubPaddockWire">
+            <div class="hubPaddockLead">
+              <div class="kicker">PADDOCK WIRE · LIVE</div>
+              <div class="hubPaddockTitle" id="paddockLeadTitle">围场快讯</div>
+              <div class="hubPaddockText" id="paddockLeadText">
+                正在接收围场消息……
+              </div>
+              <div class="hubPaddockMeta" id="paddockLeadMeta">TRACK NOTE</div>
+            </div>
+            <div class="hubPaddockRail" id="paddockRail"></div>
+            <div class="paddockTicker">
+              <div class="paddockTickerTrack" id="paddockTickerTrack"></div>
+            </div>
+            <span id="trainingStatus" style="display: none"></span>
+          </div>
+          <div class="modules compactModules">
+            <div class="module" onclick="openModule('development')">
+              <div class="modnum">MODULE 01</div>
+              <h2>赛车研发</h2>
+              <p>管理本赛季与下一代赛车项目，最多并行两项。</p>
+              <div class="statusline">进行中 <b id="devCount">0 / 2</b></div>
+            </div>
+            <div
+              class="module raceModuleCard ready"
+              id="raceModuleCard"
+              onclick="openModule('race')"
+            >
+              <div class="modnum">MODULE 02</div>
+              <h2>比赛日</h2>
+              <p id="raceGateDesc">
+                进入比赛日后先处理本周车队事务，然后直接开始比赛周末。
+              </p>
+              <div class="moduleSubAction">
+                <button
+                  class="mini"
+                  id="quickSimBtn"
+                  onclick="
+                    event.stopPropagation();
+                    quickSimCurrentRound();
+                  "
+                >
+                  一键模拟本轮
+                </button>
+              </div>
+              <div class="statusline">
+                <span id="raceModuleRound">ROUND 01</span
+                ><b id="raceModuleName">澳大利亚</b>
+              </div>
+            </div>
+            <div class="module" onclick="openModule('contracts')">
+              <div class="modnum">MODULE 02</div>
+              <h2>车手市场</h2>
+              <p>查看合同状态、车队兴趣和正在等待回复的谈判。</p>
+              <div class="statusline">
+                合同状态 <b id="contractStatus">当前车队</b>
+              </div>
+            </div>
+            <div
+              class="module standingsModuleV40"
+              onclick="openModule('season')"
+            >
+              <div class="modnum">MODULE 03</div>
+              <h2>积分榜</h2>
+              <p>查看每一站之后的 WDC、WCC 排名变化与完整比赛成绩。</p>
+              <div class="statusline">
+                当前车手排名 <b id="hubChampRank">P—</b>
+              </div>
+            </div>
+            <div
+              class="module achievementModuleV3"
+              onclick="openModule('achievements')"
+            >
+              <div class="modnum">MODULE 04</div>
+              <h2>成就陈列室</h2>
+              <p>
+                记录这份存档里真正值得留下来的瞬间，以及当前车手的隐藏挑战。
+              </p>
+              <div class="statusline">
+                已解锁 <b id="achievementHubCountV3">0 / 89</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="development">
+        <div class="wrap">
+          <div class="modulehead">
+            <div>
+              <div class="kicker">MODULE 01</div>
+              <h1>赛车研发</h1>
+            </div>
+            <button class="btn" onclick="showView('career')">← 赛季总部</button>
+          </div>
+          <div class="devOverviewGrid">
+            <div class="card devOverviewCard">
+              <span>可用研发预算</span><b class="money" id="devBudget">€ 0.0M</b
+              ><small>研发项目与下赛季储备共用这一笔预算</small>
+            </div>
+            <div class="card devOverviewCard">
+              <span>研发槽位</span><b id="devSlotStatus">0 / 2</b
+              ><small>最多同时推进两项，部件可以不同</small>
+            </div>
+            <div class="card devOverviewCard">
+              <span>车队支持</span><b id="devTrustCost">标准</b
+              ><small id="devTrustCostNote"
+                >车队信任会轻微影响项目成本与兑现率</small
+              >
+            </div>
+          </div>
+          <div class="card playerCarCard">
+            <div class="relationhead">
+              <div>
+                <h2 class="sectiontitle" style="margin-bottom: 3px">
+                  当前赛车
+                </h2>
+                <div class="small" id="playerCarTeamLabel">
+                  进入生涯后显示当前赛车六项能力。
+                </div>
+              </div>
+              <div class="small">CURRENT CAR</div>
+            </div>
+            <div id="playerCarSummary"></div>
+          </div>
+          <div class="card devSeasonControl" style="margin-bottom: 12px">
+            <div class="relationhead">
+              <div>
+                <h2 class="sectiontitle" style="margin: 0">研发计划</h2>
+                <div class="small" id="devSeasonHint">
+                  先决定项目服务当前赛车，还是下一代赛车。
+                </div>
+              </div>
+              <div class="devModeButtons">
+                <button
+                  class="mini"
+                  id="devModeCurrent"
+                  onclick="setDevModeV11('current')"
+                >
+                  本赛季赛车</button
+                ><button
+                  class="mini"
+                  id="devModeNext"
+                  onclick="setDevModeV11('next')"
+                >
+                  下赛季赛车
+                </button>
+              </div>
+            </div>
+            <div class="futureFundRow v14FundRow">
+              <div>
+                <span>下赛季现金储备</span><b id="futureFund">€ 0.0M</b>
+              </div>
+              <div>
+                <span>下赛季研究累计</span
+                ><b id="futureResearchCount">0.0 点</b>
+              </div>
+              <div class="fundTransfer">
+                <label
+                  ><span>本次划入</span>
+                  <div class="fundTransferInput">
+                    <input
+                      id="futureTransferAmount"
+                      inputmode="decimal"
+                      min="0.5"
+                      step="0.5"
+                      type="number"
+                      value="3"
+                    /><em>€M</em>
+                  </div></label
+                ><button
+                  class="mini"
+                  id="futureTransferBtn"
+                  onclick="transferBudgetV13()"
+                >
+                  锁定到下赛季
+                </button>
+              </div>
+            </div>
+            <div class="small fundRule" id="futureFundRule">
+              R10
+              后开放。现金储备和下一代研发是两回事：前者带到明年继续花，后者直接改善明年赛车基线。
+            </div>
+            <div class="devInlineNotice" id="devNotice"></div>
+          </div>
+          <div class="modulegrid devWorkbench">
+            <div>
+              <div class="card">
+                <div class="relationhead">
+                  <div>
+                    <h2 class="sectiontitle" style="margin-bottom: 3px">
+                      部件开发
+                    </h2>
+                    <div class="small">
+                      点击“制定项目”后，再选择项目规模。不会在刷新页面时随机改变工期或价格。
+                    </div>
+                  </div>
+                  <div class="small" id="devTargetLabel">CURRENT SEASON</div>
+                </div>
+                <div id="devParts"></div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="relationhead">
+                  <div>
+                    <h2 class="sectiontitle" style="margin-bottom: 3px">
+                      进行中的项目
+                    </h2>
+                    <div class="small">
+                      项目完成时才结算实际提升；大型项目收益更高，但兑现率更低。
+                    </div>
+                  </div>
+                  <div class="small">PROJECT PIPELINE</div>
+                </div>
+                <div id="projects"></div>
+                <div class="devHistory" id="devHistory"></div>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="margin-top: 12px">
+            <div class="relationhead">
+              <div>
+                <h2 class="sectiontitle" style="margin-bottom: 3px">
+                  赛车性能对比
+                </h2>
+                <div class="small">
+                  当前赛季升级完成后实时更新。下一代研究不会提前显示在本赛季赛车上。
+                </div>
+              </div>
+              <div class="small">PERFORMANCE INDEX</div>
+            </div>
+            <div id="performanceTable"></div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="contracts">
+        <div class="wrap">
+          <div class="modulehead">
+            <div>
+              <div class="kicker">MODULE 02</div>
+              <h1>车手市场 · 2027</h1>
+            </div>
+            <button class="btn" onclick="showView('career')">← 赛季总部</button>
+          </div>
+          <div id="contractContent"></div>
+        </div>
+      </section>
+      <section class="view" id="achievements">
+        <div class="wrap achievementWrapV3">
+          <div class="modulehead">
+            <div>
+              <div class="kicker">MODULE 04 · TROPHY ROOM</div>
+              <h1>成就陈列室</h1>
+            </div>
+            <button class="btn" onclick="showView('career')">← 赛季总部</button>
+          </div>
+          <div class="achievementHeroV3">
+            <div>
+              <div class="kicker">CAREER MILESTONES</div>
+              <h2 id="achievementHeroTitleV3">职业生涯纪录</h2>
+              <p id="achievementHeroTextV3">
+                所有成就都只记录这份存档里由你亲手完成的成绩；隐藏成就则属于当前车手自己。
+              </p>
+            </div>
+            <div class="achievementScoreV3">
+              <strong id="achievementCountV3">0</strong
+              ><span id="achievementTotalV3">/ 89</span><small>UNLOCKED</small>
+            </div>
+          </div>
+          <div class="achievementTabsV3">
+            <button
+              class="mini active"
+              id="achTabCommonV3"
+              onclick="setAchievementTabV3('common')"
+            >
+              通用成就</button
+            ><button
+              class="mini"
+              id="achTabHiddenV3"
+              onclick="setAchievementTabV3('hidden')"
+            >
+              隐藏成就
+            </button>
+          </div>
+          <div id="achievementContentV3"></div>
+        </div>
+      </section>
+      <section class="view" id="season">
+        <div class="wrap">
+          <div class="modulehead">
+            <div>
+              <div class="kicker">MODULE 03 · CHAMPIONSHIP</div>
+              <h1>积分榜</h1>
+            </div>
+            <button
+              class="btn"
+              id="seasonBackBtn"
+              onclick="leaveSeasonViewV14()"
+            >
+              ← 赛季总部
+            </button>
+          </div>
+          <div id="seasonContent"></div>
+        </div>
+      </section>
+      <section class="view" id="raceops">
+        <div class="raceStageWrap">
+          <div class="raceStageTop">
+            <div>
+              <div class="kicker">RACE DAY · TEAM OPS</div>
+              <div class="small" id="raceOpsBreadcrumb">ROUND 01</div>
+            </div>
+            <button class="btn" onclick="showView('career')">
+              返回赛季总部
+            </button>
+          </div>
+          <div class="raceStageHero raceOpsHeroV40">
+            <div class="kicker">BEFORE THE WEEKEND</div>
+            <h1 id="raceOpsName">车队事务</h1>
+            <div class="small" id="raceOpsMeta">处理后直接进入比赛周末</div>
+          </div>
+          <div class="raceOpsLayoutV40">
+            <div class="card raceOpsEventV40" id="raceOpsEventV40"></div>
+            <div class="card raceOpsSideV40">
+              <div class="kicker">WEEKEND EFFECT</div>
+              <h2 class="sectiontitle">临时赛车修正</h2>
+              <p class="small">
+                选择只影响当前比赛周末。进入下一站后自动恢复基础赛车数值。
+              </p>
+              <div
+                class="raceOpsEffectGridV40"
+                id="raceOpsEffectPreviewV40"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="sprint">
+        <div class="raceStageWrap">
+          <div class="raceStageTop">
+            <div>
+              <div class="kicker">SPRINT WEEKEND · SPRINT</div>
+              <div class="small" id="sprintBreadcrumb">ROUND 02</div>
+            </div>
+            <button class="btn" onclick="showView('career')">
+              退出比赛周末
+            </button>
+          </div>
+          <div class="raceStageHero sprintHero">
+            <div class="kicker">SATURDAY · F1 SPRINT</div>
+            <h1 id="sprintRaceName">中国大奖赛</h1>
+            <div class="small" id="sprintRaceMeta"></div>
+            <div class="stageContext">
+              <div class="contextbox">
+                <span>冲刺竞争力</span><b id="sprintCarContext"></b>
+              </div>
+              <div class="contextbox">
+                <span>主要需求</span><b id="sprintTrackContext"></b>
+              </div>
+              <div class="contextbox">
+                <span>赛前预测</span><b id="sprintTarget"></b>
+              </div>
+            </div>
+          </div>
+          <div class="stageBody">
+            <div class="stageBrief">
+              <h2>制定冲刺赛计划</h2>
+              <p id="sprintBrief">
+                短距离比赛没有太多修正空间，第一圈、轮胎启动和攻防风险会被放大。
+              </p>
+              <div class="strategygrid" id="sprintStrategies"></div>
+              <button
+                class="btn primary stagego"
+                disabled="disabled"
+                id="sprintStart"
+                onclick="startSprintV12()"
+              >
+                开始冲刺赛 →
+              </button>
+              <div
+                id="sprintAfter"
+                style="display: none; margin-top: 14px"
+              ></div>
+            </div>
+            <div class="gridPreview">
+              <h2 class="sectiontitle">赛车属性排名</h2>
+              <div id="sprintAttrRanks"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="qualifying">
+        <div class="raceStageWrap">
+          <div class="raceStageTop">
+            <div>
+              <div class="kicker">RACE WEEKEND · QUALIFYING</div>
+              <div class="small" id="qualBreadcrumb">ROUND 01</div>
+            </div>
+            <button class="btn" onclick="showView('career')">
+              退出比赛周末
+            </button>
+          </div>
+          <div class="raceStageHero">
+            <div class="kicker">SATURDAY · QUALIFYING</div>
+            <h1 id="qualRaceName">澳大利亚大奖赛</h1>
+            <div class="small" id="qualRaceMeta"></div>
+            <div class="stageContext">
+              <div class="contextbox">
+                <span>赛车当前竞争力</span><b id="qualCarContext"></b>
+              </div>
+              <div class="contextbox">
+                <span>赛道特征</span><b id="qualTrackContext"></b>
+              </div>
+              <div class="contextbox">
+                <span>当前目标</span><b id="qualTarget"></b>
+              </div>
+            </div>
+          </div>
+          <div class="stageBody">
+            <div class="stageBrief">
+              <h2>制定排位计划</h2>
+              <p id="qualBrief"></p>
+              <div class="strategygrid" id="qualStrategies"></div>
+              <button
+                class="btn primary stagego"
+                disabled="disabled"
+                id="qualStart"
+                onclick="startRacePhase('qual')"
+              >
+                驶出维修区 · 开始排位 →
+              </button>
+            </div>
+            <div class="gridPreview">
+              <h2 class="sectiontitle">周末信息</h2>
+              <div class="hint" id="qualWeekendInfo"></div>
+              <div style="margin-top: 14px">
+                <div class="small">本赛季记录</div>
+                <div class="weekendlog" id="qualHistory"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="grandprix">
+        <div class="raceStageWrap">
+          <div class="raceStageTop">
+            <div>
+              <div class="kicker">RACE WEEKEND · GRAND PRIX</div>
+              <div class="small" id="raceBreadcrumb">ROUND 01</div>
+            </div>
+            <button class="btn" onclick="showView('career')">
+              退出比赛周末
+            </button>
+          </div>
+          <div class="raceStageHero">
+            <div class="kicker">SUNDAY · GRAND PRIX</div>
+            <h1 id="gpRaceName">澳大利亚大奖赛</h1>
+            <div class="small" id="gpRaceMeta"></div>
+            <div class="stageContext">
+              <div class="contextbox">
+                <span>发车位</span><b id="gpGrid"></b>
+              </div>
+              <div class="contextbox">
+                <span>预计策略窗口</span><b id="gpWindow"></b>
+              </div>
+              <div class="contextbox">
+                <span>比赛重点</span><b id="gpFocus"></b>
+              </div>
+            </div>
+          </div>
+          <div class="stageBody">
+            <div class="stageBrief">
+              <h2>制定正赛计划</h2>
+              <p id="gpBrief"></p>
+              <div class="strategygrid" id="raceStrategies"></div>
+              <button
+                class="btn primary stagego"
+                disabled="disabled"
+                id="raceStart"
+                onclick="startRacePhase('race')"
+              >
+                前往发车格 · 开始正赛 →
+              </button>
+            </div>
+            <div class="gridPreview">
+              <h2 class="sectiontitle">排位结果</h2>
+              <div id="qualGridPreview"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="racecontrolV411">
+        <div class="raceControlWrapV411">
+          <div class="raceControlHeadV411">
+            <div>
+              <div class="kicker">RACE CONTROL · LIVE</div>
+              <div class="small" id="rcBreadcrumbV411"></div>
+            </div>
+            <span class="liveRaceTagV411"
+              ><i class="liveRaceDotV411"></i>比赛已暂停等待决策</span
+            >
+          </div>
+          <div id="rcContentV411"></div>
+        </div>
+      </section>
+      <section class="view" id="weekendresult">
+        <div class="raceStageWrap">
+          <div class="raceStageTop">
+            <div>
+              <div class="kicker">RACE WEEKEND · CLASSIFICATION</div>
+              <div class="small" id="resultBreadcrumb">ROUND 01</div>
+            </div>
+            <button class="btn" onclick="showView('career')">
+              返回赛季总部
+            </button>
+          </div>
+          <div class="resultHero">
+            <div class="finishCard">
+              <div class="small">FINAL CLASSIFICATION</div>
+              <div class="finishPos" id="finishPos">P1</div>
+              <h2 id="finishDriver"></h2>
+              <div class="small" id="finishTeam"></div>
+              <div class="resultMeta">
+                <div><span>发车</span><b id="finishGrid"></b></div>
+                <div><span>积分</span><b id="finishPoints"></b></div>
+                <div><span>轮次</span><b id="finishRound"></b></div>
+              </div>
+            </div>
+            <div class="resultSummary">
+              <div class="kicker">RACE REPORT</div>
+              <h2
+                class="sectiontitle"
+                id="resultRaceName"
+                style="margin-top: 5px"
+              ></h2>
+              <p id="resultNarrative"></p>
+              <div class="hint" id="resultDecision"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="relationhead">
+              <h2 class="sectiontitle" style="margin: 0">完整比赛结果</h2>
+              <div class="small">你的车手已高亮</div>
+            </div>
+            <div class="resultlist" id="finalClassification"></div>
+            <button
+              class="btn primary nextweek"
+              id="nextRoundBtn"
+              onclick="advanceRound()"
+            >
+              结束周末 · 前往下一站 →
+            </button>
+          </div>
+        </div>
+      </section>
+      <section class="view" id="seasonfinale">
+        <div class="finalSeason">
+          <div class="finalPanel">
+            <div class="kicker">2026 SEASON COMPLETE</div>
+            <div class="finalRank" id="finalChampRank">P1</div>
+            <h1 id="finalTitle">赛季结束</h1>
+            <p id="finalText"></p>
+            <div class="finalStats" id="finalStats"></div>
+            <div class="hint" id="finalContract"></div>
+            <div class="finalActions">
+              <button class="btn" onclick="openModule('season')">
+                查看最终积分榜</button
+              ><button class="btn" onclick="quickSave()">保存赛季存档</button
+              ><button
+                class="btn primary"
+                id="nextSeasonBtn"
+                onclick="startNextSeasonV11()"
+              >
+                进入下一赛季 →
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div class="sessionTransition" id="sessionTransition">
+        <div class="transitionInner">
+          <div class="kicker" id="transitionKicker">RACE WEEKEND</div>
+          <h2 id="transitionTitle">SESSION COMPLETE</h2>
+          <p id="transitionSub"></p>
+          <div class="transitionLine"><i></i></div>
+        </div>
+      </div>
+      <div class="overlay" id="overlay">
+        <div class="modal">
+          <div class="modalhead">
+            <h2 id="modalTitle"></h2>
+            <div class="x" onclick="closeOverlay()">×</div>
+          </div>
+          <div id="modalBody"></div>
+        </div>
+      </div>
+    </div>
+    <script src="./src/legacy.js"></script>
+    <script src="./src/main.js"></script>
+  </body>
+</html>

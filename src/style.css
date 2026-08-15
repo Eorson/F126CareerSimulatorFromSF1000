@@ -1,0 +1,1550 @@
+/**
+ * ========================================
+ * F1 26 Career Simulator - 全局样式表
+ * ========================================
+ * 
+ * 样式特性：
+ * 1. CSS变量系统 - 使用自定义属性实现深色/浅色主题切换
+ * 2. 响应式设计 - 支持移动设备和桌面屏幕
+ * 3. Flexbox/Grid布局 - 现代CSS布局方案
+ * 4. 动画效果 - 页面切换、模态框动画等
+ * 
+ * 主题系统：
+ * - 默认主题: 深色（暗黑模式）
+ * - 备用主题: 浅色（浅色模式）
+ * - 颜色变量通过 :root 定义，可通过JavaScript切换
+ * 
+ * 组件库：
+ * - 导航栏: .top
+ * - 卡片: .card, .module, .profilebox
+ * - 按钮: .btn
+ * - 模态框: .overlay, .modal
+ * - 网格布局: .homegrid, .drivergrid, .modulegrid 等
+ */
+
+/* ========== 基础样式与颜色系统 ========== */
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  /* F1官方色彩系统 */
+  --red: #e10600;           /* F1官方红色 */
+  --bg: #08090e;            /* 背景颜色 - 深色 */
+  --p: #151725;             /* 卡片背景颜色 - 主色 */
+  --p2: #1b1d2d;            /* 卡片背景色 - 副色 */
+  --line: #303347;          /* 分割线颜色 */
+  --muted: #8f93a9;         /* 次要文本颜色 */
+  --text: #f5f6f8;          /* 主文本颜色 */
+  --good: #26cc75;          /* 正面/成功状态颜色 */
+  --warn: #f4b942;          /* 警告/风险颜色 */
+  --blue: #4a8fff;          /* 强调蓝色 */
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, Arial, "Microsoft YaHei", sans-serif;
+  min-height: 100vh;
+}
+
+button {
+  font: inherit;
+}
+
+/* ========== 顶部导航栏 ========== */
+
+.top {
+  height: 58px;
+  padding: 0 25px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #090a10;
+  border-bottom: 1px solid #242633;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.logo {
+  font-weight: 950;
+  font-size: 23px;
+  font-style: italic;
+}
+
+.logo span {
+  color: var(--red);
+}
+
+.topright {
+  color: #7f8398;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+/* ========== 视图切换与动画 ========== */
+
+.view {
+  display: none;
+}
+
+.view.active {
+  display: block;
+  animation: viewIn 0.34s cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@keyframes viewIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ========== 内容容器与栅栏 ========== */
+
+.wrap {
+  max-width: 1180px;
+  margin: auto;
+  padding: 22px 28px 44px;
+}
+
+/* 标题样式 - 上标文字 */
+.kicker {
+  font-size: 12px;
+  color: var(--red);
+  font-weight: 900;
+  letter-spacing: 2.5px;
+}
+
+.small {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ========== 按钮组件 ========== */
+
+.btn {
+  border: 1px solid #3a3d4c;
+  background: #1a1c28;
+  color: #ddd;
+  padding: 8px 13px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: #707483;
+}
+
+.btn.primary {
+  background: var(--red);
+  border-color: var(--red);
+  color: white;
+  font-weight: 800;
+}
+
+/* ========== 首页网格布局 ========== */
+
+.homegrid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 22px;
+  min-height: calc(100vh - 105px);
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: 55px;
+  line-height: 0.9;
+  margin: 13px 0 18px;
+  font-style: italic;
+  letter-spacing: -3px;
+}
+
+.hero p {
+  max-width: 500px;
+  color: #989cad;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+/* ========== 菜单项 ========== */
+
+.menuitem {
+  width: 500px;
+  max-width: 100%;
+  margin: 8px 0;
+  padding: 16px 18px;
+  background: linear-gradient(90deg, #1b1c25, #101118);
+  border: 1px solid #30323e;
+  cursor: pointer;
+}
+
+.menuitem:hover {
+  border-color: #777;
+  background: linear-gradient(90deg, rgba(225, 6, 0, 0.22), #101118);
+}
+
+.menuitem b {
+  font-size: 17px;
+}
+
+.menuitem span {
+  display: block;
+  margin-top: 3px;
+  font-size: 12px;
+  color: #7d8194;
+}
+
+/* ========== 模态框与覆盖层系统 ========== */
+
+/* 背景覆盖层 - 用于模态框背景 */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.83);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay.open {
+  display: flex;
+  animation: veilIn 0.2s ease both;
+}
+
+.overlay.open .modal {
+  animation: modalIn 0.25s cubic-bezier(0.2, 0.8, 0.25, 1) both;
+}
+
+@keyframes veilIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 模态框容器 */
+.modal {
+  width: min(860px, 92vw);
+  max-height: 84vh;
+  background: #11121a;
+  border: 1px solid #444754;
+  overflow: auto;
+}
+
+/* 模态框头部 */
+.modalhead {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 19px;
+  background: #11121a;
+  border-bottom: 1px solid #30323e;
+  z-index: 2;
+}
+
+.modalhead h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* 关闭按钮 */
+.x {
+  font-size: 20px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+/* ========== 车手选择网格 ========== */
+
+.drivergrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 15px;
+}
+
+.driverchoice {
+  padding: 13px;
+  background: #191b25;
+  border: 1px solid #2c2f3b;
+  cursor: pointer;
+}
+
+.driverchoice:hover {
+  border-color: var(--red);
+}
+
+.driverchoice b {
+  font-size: 15px;
+}
+
+/* 车手综合评分 - 显示在右上角 */
+.driverchoice .ovr {
+  float: right;
+  color: var(--red);
+  font-weight: 900;
+  font-size: 18px;
+}
+
+.driverchoice small {
+  display: block;
+  color: #777b8c;
+  margin-top: 3px;
+}
+
+/* ========== 车手档案 ========== */
+
+.profilebox {
+  background: #181a2a;
+  border: 1px solid #32354a;
+  border-radius: 18px;
+  padding: 25px 30px;
+}
+
+.profiletitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.drivername {
+  font-size: 38px;
+  font-weight: 900;
+  margin: 2px 0 8px;
+}
+
+/* 标签 - 如车手的职位或类别 */
+.tag {
+  display: inline-block;
+  padding: 5px 9px;
+  background: rgba(225, 6, 0, 0.17);
+  color: #ff6d68;
+  font-size: 14px;
+}
+
+.year {
+  color: #777b90;
+  text-align: right;
+  font-size: 14px;
+}
+
+.year b {
+  display: block;
+  color: #fff;
+  font-size: 28px;
+}
+
+/* ========== 属性栏与进度条 ========== */
+
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  margin-top: 21px;
+  padding-top: 21px;
+  border-top: 1px solid var(--line);
+}
+
+.sectiontitle {
+  font-size: 17px;
+  color: #a8abbd;
+  margin: 0 0 14px;
+}
+
+/* 属性项 - 标签 + 进度条 + 数值 */
+.attr {
+  display: grid;
+  grid-template-columns: 72px 1fr 40px;
+  gap: 10px;
+  align-items: center;
+  margin: 10px 0;
+  font-size: 14px;
+  color: #aeb1c0;
+}
+
+/* 进度条容器 */
+.bar {
+  height: 10px;
+  background: #08090e;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* 进度条填充 - 渐变色 */
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--red), #ff7048);
+}
+
+.attr strong {
+  text-align: right;
+  color: #fff;
+}.carhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.carovr{font-size:38px;font-weight:950}.carovr span{font-size:12px;color:#777;display:block;letter-spacing:1px}.part{display:grid;grid-template-columns:80px 1fr 34px;gap:9px;align-items:center;margin:9px 0;font-size:13px;color:#aeb1c0}.part .bar{height:8px}.part strong{text-align:right}.profileactions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}
+/* career hub */
+.careerHeader{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:16px}.careerHeader h1{margin:3px 0 0;font-size:28px}.seasoninfo{text-align:right}.seasoninfo b{display:block;font-size:17px}.hubtop{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:12px;margin-bottom:12px}.card{background:var(--p);border:1px solid #2d3040;padding:16px}.drivercard{display:flex;align-items:center;justify-content:space-between}.drivercard h2{font-size:20px;margin:0 0 4px}.big{font-size:27px;font-weight:900}.money{color:#59d68b}.nextRace b{font-size:17px}.progressline{height:5px;background:#0b0c12;margin-top:11px;overflow:hidden}.progressline div{height:100%;background:var(--red)}
+.modules{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.module{min-height:190px;background:linear-gradient(155deg,#1b1d2d,#11131b);border:1px solid #303345;padding:17px;cursor:pointer;position:relative;overflow:hidden;transition:.15s}.module:hover{transform:translateY(-3px);border-color:#6c7082}.module:after{content:"";position:absolute;right:-25px;bottom:-40px;width:100px;height:100px;border:17px solid rgba(255,255,255,.025);border-radius:50%}.modnum{font-size:11px;color:#6f7387;letter-spacing:2px}.module h2{font-size:20px;margin:15px 0 8px}.module p{font-size:12px;color:#868a9d;line-height:1.6}.statusline{position:absolute;bottom:15px;left:17px;right:17px;border-top:1px solid #2d3040;padding-top:10px;font-size:12px;color:#aeb1c0}.statusline b{float:right;color:#fff}
+.quick{display:grid;grid-template-columns:1.4fr .6fr;gap:12px;margin-top:12px}.news{font-size:13px;color:#a5a8b8;line-height:1.6}.standmini{font-size:13px}.standmini div{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #282a37}
+/* module screens */
+.modulehead{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}.modulehead h1{margin:3px 0 0;font-size:28px}.modulegrid{display:grid;grid-template-columns:1fr .9fr;gap:12px}.devitem,.trainitem,.relation{background:#171925;border:1px solid #2c2f3e;padding:13px;margin-bottom:8px}.devitem h3,.trainitem h3{margin:0 0 5px;font-size:15px}.meta{display:flex;gap:15px;color:#7e8296;font-size:12px}.devitem button,.trainitem button{float:right;margin-top:-29px}.project{padding:11px;background:#0f1017;border-left:3px solid var(--red);margin:8px 0;font-size:13px}.project b{display:block}.project small{color:#818598}.hint{padding:12px;background:#11131c;border:1px dashed #393c4d;color:#8c90a2;font-size:12px;line-height:1.6}
+.relationships{display:grid;grid-template-columns:1fr 1fr;gap:10px}.relbar{display:grid;grid-template-columns:1fr 120px 35px;gap:9px;align-items:center;font-size:13px;margin:8px 0}.relbar .bar{height:8px}.goodfill{height:100%;background:var(--good)}
+.actionrow{display:flex;gap:6px;margin-top:8px}.mini{padding:5px 8px;border:1px solid #3a3d4b;background:#1d1f2b;color:#ccc;font-size:11px;cursor:pointer}.mini:hover{border-color:#777}
+.mini:disabled{opacity:.38;cursor:not-allowed;border-color:#2b2d38;background:#12131a}
+.driverstats{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}
+.driverstat{background:#10121a;border:1px solid #2b2e3b;padding:8px 9px}
+.driverstat span{display:block;color:#777c91;font-size:10.5px;letter-spacing:.8px}
+.driverstat b{display:block;margin-top:3px;font-size:17px}
+.trainoverview{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-bottom:12px}
+.trainoverview .driverstat{padding:10px}
+.personrole{color:#777b8d;font-size:11px;margin-top:2px}
+.used{color:#6f7387;font-size:11px;margin-left:auto}
+.locknote{margin:9px 0;padding:9px 10px;background:rgba(225,6,0,.08);border:1px solid rgba(225,6,0,.25);color:#bc8290;font-size:11px}
+.perfwrap{overflow:auto;border:1px solid #2d3040;background:#11131b;margin-bottom:12px}
+.perftable{width:100%;border-collapse:collapse;min-width:860px;font-size:12px}
+.perftable th{padding:9px 10px;text-align:right;color:#7f8398;font-size:10.5px;letter-spacing:.8px;border-bottom:1px solid #343746;background:#12141d;white-space:nowrap}
+.perftable th:nth-child(2),.perftable td:nth-child(2){text-align:left}
+.perftable td{padding:9px 10px;text-align:right;border-bottom:1px solid #252836;color:#c8cad4}
+.perftable tr:last-child td{border-bottom:0}.perftable tr.mine{background:rgba(225,6,0,.09)}.perftable tr.mine td{color:#fff}
+.perftable .rank{color:#656a7e;width:35px}.perftable .teamname{font-weight:800;white-space:nowrap}.perftable .overall{font-weight:950;color:#fff}
+.devsummary{display:grid;grid-template-columns:1.45fr .55fr;gap:12px;margin-bottom:12px}
+.prhero{display:grid;grid-template-columns:1.15fr .85fr;gap:12px;margin-bottom:12px}
+.printro{background:linear-gradient(135deg,#1b1d2b,#11131b);border:1px solid #303345;padding:18px}
+.printro h2{margin:2px 0 7px;font-size:20px}.printro p{margin:0;color:#8d91a4;font-size:12px;line-height:1.7}
+.prquota{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.quotabox{background:#11131b;border:1px solid #303345;padding:13px}.quotabox span{display:block;color:#777c90;font-size:10.5px;letter-spacing:1px}.quotabox b{display:block;margin-top:6px;font-size:18px}.quotabox small{display:block;margin-top:4px;color:#777c90;font-size:11px}
+.quotabox.available{border-color:#465064}.quotabox.used{opacity:.72}.quotadot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--good);margin-right:6px}.quotabox.used .quotadot{background:#656a7d}
+.relationhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.relationhead .small{max-width:280px;text-align:right}
+.relation .actionrow{justify-content:flex-end}.relation .actionrow .mini{min-width:84px}
+.actionpicker{padding:14px}.actionchoice{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px 14px;margin-bottom:8px;background:#191b25;border:1px solid #2d3040;cursor:pointer}
+.actionchoice:hover{border-color:var(--red);background:#1d1f2b}.actionchoice b{display:block;font-size:14px}.actionchoice small{color:#7f8398;font-size:11px}.actionchoice strong{color:#72dfa0;font-size:13px}
+.raceday{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}.racehero{min-height:240px;background:linear-gradient(135deg,#1a1c28,#12131b);border:1px solid #343746;padding:22px}.racehero .round{color:var(--red);font-size:12px;font-weight:900;letter-spacing:2px}.racehero h1{font-size:34px;margin:7px 0}.schedule div{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #2a2d39;font-size:13px}.calendargrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.cal{background:#171925;border:1px solid #2b2e3c;padding:10px;min-height:70px}.cal.current{border-color:var(--red);box-shadow:inset 3px 0 var(--red)}.cal .r{font-size:11px;color:#707488}.cal b{display:block;font-size:13px;margin:5px 0}.cal small{color:#85899a}.sprint{color:#f4b942!important}
+@media(max-width:900px){.homegrid,.split,.hubtop,.quick,.modulegrid,.raceday,.prhero{grid-template-columns:1fr}.modules{grid-template-columns:1fr 1fr}.drivergrid{grid-template-columns:1fr}.calendargrid{grid-template-columns:1fr 1fr}.wrap{padding:18px}.drivername{font-size:30px}}
+
+/* v6 driver detail */
+.driverchoice{position:relative;min-height:68px}.driverchoice:after{content:"选择车手 →";position:absolute;right:13px;bottom:10px;color:#666b7d;font-size:10.5px;letter-spacing:.4px}.driverchoice:hover:after{color:#ff8b86}
+.driverdetail{padding:18px}.driverdetailtop{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding-bottom:15px;border-bottom:1px solid #2e3140}.driverdetailname{font-size:28px;font-weight:950;margin:3px 0}.driverbadge{display:inline-block;padding:4px 7px;margin-right:5px;background:#1d202d;border:1px solid #343747;color:#aaaec0;font-size:11px}.drivernumber{font-size:46px;font-weight:950;color:var(--red);line-height:1}.detailgrid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;margin-top:14px}.detailstats{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.detailstat{padding:10px;background:#0e1017;border:1px solid #292c39}.detailstat span{display:block;color:#777c90;font-size:10.5px}.detailstat b{display:block;font-size:18px;margin-top:3px}.historygrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:9px}.historybox{padding:10px;background:#12141d;border:1px solid #2d3040}.historybox span{display:block;color:#777c90;font-size:10.5px}.historybox b{display:block;font-size:17px;margin-top:3px}.historyline{padding:10px 0;border-bottom:1px solid #292c38;font-size:12px;color:#9da1b2}.historyline:last-child{border-bottom:0}.historyline b{color:#fff}.detailactions{display:flex;justify-content:space-between;gap:8px;margin-top:15px}
+/* v6 media rail */
+.driverrail{display:flex;gap:8px;overflow-x:auto;padding:2px 1px 10px;scroll-snap-type:x proximity}.driverrail::-webkit-scrollbar{height:7px}.driverrail::-webkit-scrollbar-thumb{background:#343746;border-radius:10px}.driverpill{flex:0 0 178px;scroll-snap-align:start;background:#171925;border:1px solid #2c2f3e;padding:12px}.driverpill b{display:block;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.driverpill .personrole{height:22px}.driverpill .pillscore{display:flex;justify-content:space-between;align-items:center;margin:9px 0 5px;font-size:11px;color:#777c90}.driverpill .bar{height:7px}.driverpill .mini{width:100%;margin-top:10px}.railnote{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:#777c90;font-size:11px}
+/* v6 race simulator */
+.raceLayout{display:grid;grid-template-columns:1.25fr .75fr;gap:12px}.racebanner{background:linear-gradient(135deg,#1b1d2b,#11131b);padding:20px}.racebanner h1{font-size:31px;margin:5px 0}.raceformula{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:16px}.weightbox{background:#0f1118;border:1px solid #303342;padding:10px}.weightbox b{font-size:20px}.weightbox span{display:block;color:#7e8294;font-size:10.5px;margin-top:3px}.racepanel{margin-top:12px}.racepanel.locked{opacity:.52}.stagehead{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:10px}.stagestatus{font-size:11px;color:#85899c;border:1px solid #343746;padding:5px 7px}.stagestatus.done{color:#76dfa2;border-color:#315a44}.strategygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.strategychoice{background:#11131b;border:1px solid #303342;padding:11px;cursor:pointer;min-height:100px}.strategychoice:hover{border-color:#737789}.strategychoice.selected{border-color:var(--red);box-shadow:inset 0 -2px var(--red);background:rgba(225,6,0,.07)}.strategychoice b{display:block;font-size:13px}.strategychoice small{display:block;color:#7f8397;font-size:10.5px;line-height:1.5;margin-top:5px}.risk{display:inline-block;margin-top:7px;padding:3px 5px;background:#1d202b;color:#a9adbd;font-size:10.5px}.stageaction{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:11px;padding-top:10px;border-top:1px solid #2a2d3a}.stageaction .resultbig{font-size:24px;font-weight:950}.scorebreak{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}.scorebreak div{background:#0f1118;border:1px solid #292c38;padding:7px;font-size:10.5px;color:#777c90}.scorebreak b{display:block;color:#fff;font-size:15px;margin-top:2px}.eventcard{padding:16px}.eventcard h3{margin:4px 0 7px;font-size:18px}.eventcard p{font-size:12px;color:#8e92a4;line-height:1.6}.eventchoice{padding:12px;margin-top:7px;background:#181a25;border:1px solid #303342;cursor:pointer}.eventchoice:hover{border-color:var(--red)}.eventchoice b{font-size:13px}.eventchoice span{float:right;color:#9296a8;font-size:10.5px}.eventchoice small{display:block;color:#777c90;font-size:10.5px;margin-top:4px}.resultlist{margin-top:9px}.resultrow{display:grid;grid-template-columns:30px 1fr 80px 42px;gap:7px;align-items:center;padding:7px 8px;border-bottom:1px solid #282b38;font-size:11px}.resultrow.mine{background:rgba(225,6,0,.09);border-left:2px solid var(--red)}.resultrow .pos{font-weight:900;color:#fff}.resultrow .rteam{color:#767b8e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.weekendlog{font-size:12px;color:#989cad;line-height:1.65}.weekendlog div{padding:8px 0;border-bottom:1px solid #292c38}.weekendlog b{color:#fff}.nextweek{width:100%;margin-top:10px}.racecalendar{margin-top:12px}.racecalendar .calendargrid{grid-template-columns:1fr 1fr}.compactcal{min-height:58px}.compactcal b{font-size:12px}.compactcal small{font-size:10.5px}
+@media(max-width:900px){.detailgrid,.raceLayout{grid-template-columns:1fr}.detailstats{grid-template-columns:repeat(5,1fr)}.historygrid{grid-template-columns:1fr 1fr}.strategygrid{grid-template-columns:1fr}.raceformula{grid-template-columns:repeat(3,1fr)}}
+
+
+/* v7 hub dossier / save system */
+.driverhubclick{cursor:pointer;transition:.15s;position:relative}.driverhubclick:hover{border-color:#696e82;transform:translateY(-1px)}.driverhubclick:after{content:"查看完整车手档案 →";position:absolute;right:14px;bottom:10px;color:#70758a;font-size:10.5px}.driverhubclick:hover:after{color:#ff8883}
+.careerTools{display:flex;gap:7px;align-items:center;margin-top:9px;justify-content:flex-end}.savegrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}.savecard{background:#171925;border:1px solid #303342;padding:13px;min-height:130px}.savecard h3{font-size:14px;margin:0 0 7px}.savecard p{font-size:11px;color:#818598;line-height:1.55;min-height:42px}.saveactions{display:flex;gap:5px;margin-top:10px}.saveactions .mini{flex:1}.autosavenote{padding:0 14px 14px;color:#777c90;font-size:11px}.resume{display:none}.resume.show{display:block}
+/* v7 race flow */
+.raceStageWrap{max-width:980px;margin:auto;padding:28px 28px 48px}.raceStageTop{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.raceStageHero{background:linear-gradient(135deg,#1d2030,#10121a);border:1px solid #343849;padding:24px;position:relative;overflow:hidden}.raceStageHero:after{content:"";position:absolute;width:260px;height:260px;border:45px solid rgba(255,255,255,.018);border-radius:50%;right:-110px;top:-100px}.raceStageHero h1{font-size:38px;margin:5px 0 7px}.stageContext{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:17px}.contextbox{background:#10121a;border:1px solid #2e3140;padding:10px}.contextbox span{display:block;font-size:10.5px;color:#72778b;letter-spacing:.6px}.contextbox b{display:block;font-size:14px;margin-top:4px}.stageBody{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-top:12px}.stageBrief{background:#151725;border:1px solid #2d3040;padding:17px}.stageBrief h2{font-size:18px;margin:0 0 8px}.stageBrief p{font-size:12px;color:#9296a8;line-height:1.7}.strategychoice{min-height:112px}.strategychoice .approach{display:block;margin-top:7px;font-size:10.5px;color:#aeb1c0}.stagego{width:100%;margin-top:12px;padding:12px}.gridPreview{background:#151725;border:1px solid #2d3040;padding:16px}.gridPreview .resultrow{grid-template-columns:34px 1fr 90px}.gridPreview .resultrow strong{display:none}.resultHero{display:grid;grid-template-columns:.8fr 1.2fr;gap:12px;margin-bottom:12px}.finishCard{background:linear-gradient(135deg,#202334,#11131b);border:1px solid #343849;padding:24px}.finishPos{font-size:64px;font-weight:950;line-height:.9}.finishPos span{font-size:14px;color:#8c90a2}.finishCard h2{font-size:21px;margin:12px 0 5px}.resultSummary{background:#151725;border:1px solid #2d3040;padding:18px}.resultSummary p{font-size:12px;color:#9397a9;line-height:1.75}.resultMeta{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.resultMeta div{background:#0f1118;border:1px solid #292c38;padding:9px}.resultMeta span{display:block;font-size:10.5px;color:#74798d}.resultMeta b{display:block;font-size:17px;margin-top:3px}.eventcard{max-width:760px;margin:auto}.eventscene{padding:11px 12px;background:#0e1017;border-left:3px solid var(--red);font-size:12px;color:#aeb1c0;line-height:1.7;margin:10px 0 12px}.eventchoice small{font-size:11px;line-height:1.55}.easter{display:inline-block;padding:3px 6px;border:1px solid #685739;color:#f1c868;font-size:10.5px;margin-bottom:5px}.relationtag{font-size:10.5px;padding:3px 5px;border:1px solid #343746;color:#989cad;margin-left:5px}.relationshipNote{font-size:10.5px;color:#73788c;margin-top:5px;min-height:20px}.driverpill{flex-basis:190px}
+@media(max-width:900px){.savegrid,.stageBody,.resultHero{grid-template-columns:1fr}.stageContext{grid-template-columns:1fr 1fr}.careerTools{justify-content:flex-start}.raceStageWrap{padding:18px}.raceStageHero h1{font-size:30px}}
+
+
+/* v8 polish / training preparation / race flow */
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(circle at 72% 12%,rgba(225,6,0,.055),transparent 26%),radial-gradient(circle at 18% 70%,rgba(74,143,255,.035),transparent 24%)}
+.card,.module,.profilebox,.raceStageHero,.stageBrief,.gridPreview,.finishCard,.resultSummary,.printro,.quotabox{box-shadow:0 12px 36px rgba(0,0,0,.16)}
+.module,.card,.btn,.mini,.strategychoice{transition:border-color .18s ease,transform .18s ease,background .18s ease,box-shadow .18s ease,opacity .18s ease}
+.module:hover{box-shadow:0 18px 40px rgba(0,0,0,.24)}
+.raceStageTop{position:relative}.raceStageTop:after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:1px;background:linear-gradient(90deg,var(--red),#343746 34%,transparent)}
+.raceStageHero{border-radius:3px}.stageBrief,.gridPreview,.finishCard,.resultSummary{border-radius:2px}
+.sessionTransition{position:fixed;inset:0;z-index:80;background:#08090e;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .24s ease}.sessionTransition.show{opacity:1;pointer-events:auto}.transitionInner{width:min(720px,86vw);border-top:2px solid var(--red);padding-top:18px}.transitionInner .kicker{margin-bottom:8px}.transitionInner h2{font-size:38px;margin:0 0 8px;font-style:italic}.transitionInner p{font-size:12px;color:#858a9c;margin:0}.transitionLine{height:2px;background:#242733;margin-top:18px;overflow:hidden}.transitionLine i{display:block;height:100%;width:0;background:var(--red)}.sessionTransition.show .transitionLine i{animation:transitionSweep .65s ease forwards}@keyframes transitionSweep{to{width:100%}}
+.strategychoice .swing{display:block;margin-top:8px;color:#71768a;font-size:10.5px;line-height:1.45}.strategychoice.selected .swing{color:#c5c8d2}.strategychoice:hover{transform:translateY(-2px)}
+.eventcard{border-radius:2px}.eventchoice{transition:.16s ease}.eventchoice:hover{transform:translateX(3px);background:#1d202d}.eventscene{position:relative;padding-left:16px}.eventscene:before{content:"RADIO";display:block;color:#676c80;font-size:10.5px;letter-spacing:1.5px;margin-bottom:4px}
+
+
+/* v9 light broadcast theme */
+:root{--red:#e10600;--bg:#eef1f5;--p:#ffffff;--p2:#f5f7fa;--line:#d9dee7;--muted:#687284;--text:#171a21;--good:#159a5b;--warn:#b9780f;--blue:#2f6fde}
+html{background:#eef1f5}body{background:linear-gradient(135deg,#f7f8fa 0%,#edf1f5 48%,#e8edf3 100%);color:var(--text)}
+body:before{background:radial-gradient(circle at 78% 8%,rgba(225,6,0,.075),transparent 24%),radial-gradient(circle at 10% 74%,rgba(47,111,222,.055),transparent 26%)}
+.top{background:rgba(251,252,253,.94);border-bottom:1px solid #d8dde5;box-shadow:0 6px 22px rgba(30,38,52,.07);backdrop-filter:blur(12px)}
+.logo{color:#171a21}.topright{color:#747d8b}.small{color:#6d7685}.kicker{color:#d50802}
+.btn{background:#fff;color:#2a2e36;border-color:#cfd5de;border-radius:7px;box-shadow:0 2px 8px rgba(32,41,55,.04)}.btn:hover{border-color:#aab2bf;background:#f5f7fa}.btn.primary{background:#e10600;border-color:#e10600;color:white;box-shadow:0 7px 18px rgba(225,6,0,.17)}
+.menuitem{background:rgba(255,255,255,.88);border-color:#d8dde5;border-radius:10px;box-shadow:0 8px 24px rgba(36,45,60,.06)}.menuitem:hover{border-color:#c2c9d3;background:#fff;box-shadow:0 12px 28px rgba(36,45,60,.10)}.menuitem span{color:#747d8b}.hero p{color:#687284}
+.card,.profilebox,.module,.printro,.quotabox,.stageBrief,.gridPreview,.resultSummary,.prepStatus{background:rgba(255,255,255,.92);border-color:#d9dee7;color:#171a21;box-shadow:0 10px 26px rgba(36,45,60,.065);border-radius:10px}
+.module{background:linear-gradient(155deg,#ffffff,#f4f6f9)}.module:hover{border-color:#b7bec9;background:#fff;box-shadow:0 15px 34px rgba(36,45,60,.10)}.module:after{border-color:rgba(225,6,0,.035)}.modnum{color:#858e9d}.module p{color:#707989}.statusline{border-color:#e2e6ec;color:#707989}.statusline b{color:#20242c}
+.sectiontitle{color:#303640}.drivername,.carovr,.big{color:#171a21}.year{color:#7b8492}.year b{color:#171a21}.split{border-color:#e0e4ea}.attr,.part{color:#626c7b}.attr strong,.part strong{color:#20242c}.bar,.progressline,.prepbar{background:#e5e9ef}.fill{background:linear-gradient(90deg,#d90702,#ff5a48)}
+.driverstat,.detailstat,.historybox,.resultMeta div,.contextbox,.prepmeter,.weightbox{background:#f6f8fa;border-color:#dce1e8;color:#20242c}.driverstat span,.detailstat span,.historybox span,.resultMeta span,.contextbox span,.prepmeterhead,.weightbox span{color:#737d8d}.driverstat b,.detailstat b,.historybox b,.resultMeta b,.contextbox b,.prepmeterhead b,.weightbox b{color:#171a21}
+.devitem,.trainitem,.relation,.driverpill,.savecard{background:#f8f9fb;border-color:#dce1e8}.project{background:#f5f7f9}.project small,.personrole,.used{color:#768091}.hint{background:#f7f8fa;border-color:#cfd5de;color:#667080}.locknote{background:rgba(225,6,0,.055);border-color:rgba(225,6,0,.2);color:#9c4d50}.mini{background:#fff;color:#3b414c;border-color:#cfd5de;border-radius:6px}.mini:hover{background:#f3f5f7;border-color:#aeb6c2}.mini:disabled{background:#eef1f4;border-color:#d9dee5;color:#9ba3af}
+.perfwrap{background:#fff;border-color:#d9dee7;border-radius:8px}.perftable th{background:#f0f3f6;color:#687284;border-color:#d9dee7}.perftable td{color:#444b57;border-color:#e5e8ed}.perftable tr.mine{background:rgba(225,6,0,.055)}.perftable tr.mine td{color:#1f232b}.perftable .rank{color:#8a93a0}.perftable .overall{color:#171a21}
+.printro{background:linear-gradient(135deg,#fff,#f2f4f7)}.printro p{color:#687284}.quotabox{background:#f7f9fb}.driverrail::-webkit-scrollbar-thumb{background:#c8ced7}.driverpill .pillscore,.railnote{color:#758090}.relationtag{border-color:#ccd3dc;color:#697383;background:#fff}
+.overlay{background:rgba(31,38,50,.42);backdrop-filter:blur(6px)}.modal{background:#fbfcfd;border-color:#d2d8e1;border-radius:12px;box-shadow:0 26px 70px rgba(25,33,45,.22)}.modalhead{background:rgba(251,252,253,.96);border-color:#dce1e8}.x{color:#697384}.driverchoice{background:#f7f9fb;border-color:#dce1e8;border-radius:8px}.driverchoice:hover{background:#fff}.driverchoice:after{color:#8a93a1}.driverbadge{background:#f3f5f7;border-color:#d8dde5;color:#5e6878}.driverdetailtop,.historyline{border-color:#e1e5eb}.historyline{color:#697383}.historyline b{color:#171a21}
+.raceStageTop:after{background:linear-gradient(90deg,var(--red),#cfd5de 34%,transparent)}.raceStageHero,.trackPrep,.finishCard{background:linear-gradient(135deg,#ffffff 0%,#f2f4f7 72%,#edf0f4 100%);border-color:#d7dde6;color:#171a21;border-radius:12px;box-shadow:0 14px 34px rgba(36,45,60,.08)}.raceStageHero:after{border-color:rgba(225,6,0,.035)}.trackPrep:after{color:rgba(19,24,32,.035)}.stageBrief,.gridPreview,.resultSummary{border-radius:10px}.stageBrief p,.resultSummary p,.prepStatus p{color:#697384}
+.strategychoice{background:#f7f9fb;border-color:#d7dde6;border-radius:9px}.strategychoice:hover{background:#fff;border-color:#aeb7c4;box-shadow:0 7px 18px rgba(36,45,60,.07)}.strategychoice.selected{background:rgba(225,6,0,.045);border-color:#e10600;box-shadow:inset 0 -2px #e10600,0 6px 16px rgba(225,6,0,.06)}.strategychoice small,.strategychoice .swing{color:#6d7787}.strategychoice.selected .swing{color:#3d444f}.strategychoice .approach{color:#555e6c}.risk{background:#eceff3;color:#5f6978}
+.resultrow{border-color:#e5e8ed;color:#373e49}.resultrow.mine{background:rgba(225,6,0,.055)}.resultrow .pos{color:#171a21}.resultrow .rteam{color:#7b8594}.weekendlog{color:#667080}.weekendlog div{border-color:#e3e7ed}.weekendlog b{color:#171a21}
+.eventscene{background:#f4f6f8;color:#4d5664}.eventscene:before{color:#8c95a3}.eventchoice{background:#f8f9fb;border-color:#d9dee6;border-radius:8px}.eventchoice:hover{background:#fff}.eventchoice span{color:#758090}.eventchoice small{color:#667080}.easter{background:#fff7df;border-color:#dfc67d;color:#986d16}
+
+.cal{background:#f7f9fb;border-color:#dce1e8;border-radius:7px}.cal.current{background:#fff;border-color:#e10600}.cal .r,.cal small{color:#748090}.schedule div,.standmini div{border-color:#e3e7ed}
+.sessionTransition{background:rgba(247,249,251,.98)}.transitionInner{border-color:#e10600}.transitionInner h2{color:#171a21}.transitionInner p{color:#6f7988}.transitionLine{background:#dfe4ea}
+.money{color:#138851}.goodfill{background:#159a5b}.tag{background:rgba(225,6,0,.075);color:#b60b07}
+.driverhubclick:after{color:#828b99}.driverhubclick:hover:after{color:#d70904}
+@media(max-width:900px){.top{padding:0 16px}.wrap{padding:18px 14px 34px}.raceStageWrap{padding:18px 14px 36px}}
+
+/* v10 career systems */
+.modules{grid-template-columns:repeat(3,1fr)}
+.module{min-height:205px}.module .moduleSubAction{position:absolute;left:17px;right:17px;bottom:44px;display:flex;gap:6px;z-index:2}.module .moduleSubAction .mini{flex:1;background:#fff}
+.car6grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.car6{background:#f7f9fb;border:1px solid #dfe4ea;border-radius:9px;padding:10px}.car6 span{display:block;font-size:10.5px;color:#7d8795;letter-spacing:.5px}.car6 b{display:block;font-size:20px;margin-top:4px;color:#161a21}.car6.hot b{color:#d60702}.car6.cool b{color:#4b596c}
+.teamperf10{overflow:auto}.teamperf10 table{width:100%;min-width:900px;border-collapse:collapse;font-size:12px}.teamperf10 th{font-size:10.5px;color:#7b8491;letter-spacing:.6px;padding:9px;border-bottom:1px solid #dce1e7;text-align:right;white-space:nowrap}.teamperf10 th:nth-child(2),.teamperf10 td:nth-child(2){text-align:left}.teamperf10 td{padding:9px;border-bottom:1px solid #e8ebef;text-align:right}.teamperf10 tr.mine{background:#fff1f0}.teamperf10 .rank{color:#8c95a1}.teamperf10 .teamname{font-weight:850;color:#20242b}.teamperf10 .best{color:#d70702;font-weight:900}
+.forecastStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.forecastBox{background:#fff;border:1px solid #dfe4ea;border-radius:8px;padding:11px}.forecastBox span{display:block;color:#7a8491;font-size:10.5px;letter-spacing:.5px}.forecastBox b{display:block;margin-top:4px;font-size:18px}.forecastBox small{display:block;color:#7c8591;margin-top:4px;font-size:11px;line-height:1.4}
+.teamRelationHero{display:grid;grid-template-columns:.75fr 1.25fr;gap:12px;margin-bottom:12px}.relationGauge{background:linear-gradient(135deg,#fff,#f4f6f8);border:1px solid #dce1e7;border-radius:12px;padding:19px}.relationGauge .status{font-size:27px;font-weight:950;margin:5px 0}.relationScale{height:8px;background:#e7eaf0;border-radius:10px;overflow:hidden;margin-top:12px}.relationScale>div{height:100%;background:linear-gradient(90deg,#d21a14,#f0a72f,#19a35b)}.rivalStats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}.rivalStats div{background:#f7f9fb;border:1px solid #e1e5ea;padding:9px;border-radius:7px}.rivalStats span{display:block;font-size:10.5px;color:#818a96}.rivalStats b{font-size:18px}
+.weekEvent{background:#fff;border:1px solid #dce1e7;border-radius:12px;padding:18px}.weekEvent h2{margin:4px 0 7px;font-size:20px}.weekEvent p{font-size:13px;color:#626c79;line-height:1.65}.weeklyChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.weeklyChoice{border:1px solid #d9dee5;background:#f8f9fb;border-radius:9px;padding:12px;cursor:pointer;transition:.16s}.weeklyChoice:hover{transform:translateY(-2px);border-color:#d70b06;background:#fff}.weeklyChoice b{font-size:13px}.weeklyChoice span{display:block;font-size:11px;color:#757f8b;margin-top:5px;line-height:1.5}.weeklyChoice small{display:block;margin-top:8px;color:#a06a1f}
+.contractTop{display:grid;grid-template-columns:.8fr 1.2fr;gap:12px;margin-bottom:12px}.contractCurrent{background:linear-gradient(135deg,#fff,#f5f7fa);border:1px solid #dce2e8;border-radius:12px;padding:18px}.contractCurrent h2{margin:4px 0}.contractMarket{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.contractCard{background:#fff;border:1px solid #dce1e7;border-radius:10px;padding:13px}.contractCard.offer{border-color:#e6a09e;box-shadow:inset 3px 0 #e10600}.contractCard.signed{border-color:#8fc8a9;box-shadow:inset 3px 0 #159a5b}.contractCard .cHead{display:flex;justify-content:space-between;gap:8px}.contractCard h3{font-size:14px;margin:0}.interest{font-size:11px;color:#75808d}.interestBar{height:5px;background:#e7eaf0;border-radius:9px;overflow:hidden;margin:8px 0}.interestBar div{height:100%;background:#e10600}.contractTerms{font-size:11px;color:#67717d;line-height:1.6;min-height:42px}
+.standingsLayout{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}.standingTable{width:100%;border-collapse:collapse;font-size:12px}.standingTable th{font-size:10.5px;color:#7c8591;text-align:right;padding:8px;border-bottom:1px solid #dce1e7}.standingTable th:nth-child(2),.standingTable td:nth-child(2){text-align:left}.standingTable td{padding:8px;text-align:right;border-bottom:1px solid #eceff2}.standingTable tr.mine{background:#fff1f0}.historyCards{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.historyRace{border:1px solid #e0e4e9;background:#fafbfc;border-radius:8px;padding:10px}.historyRace span{font-size:10.5px;color:#7d8692}.historyRace b{display:block;margin:4px 0}.historyRace small{font-size:11px;color:#68727e}.dnf{color:#b41611!important}.aiNews{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.aiNews span{font-size:10.5px;background:#f1f4f7;border:1px solid #dfe4ea;padding:5px 7px;border-radius:20px;color:#65707d}
+.finalSeason{min-height:calc(100vh - 58px);display:grid;place-items:center;padding:30px;background:radial-gradient(circle at 50% 15%,#fff 0,#f4f6f8 48%,#e9edf2 100%)}.finalPanel{max-width:880px;width:100%;background:#fff;border:1px solid #d9dfe6;border-radius:18px;padding:30px;box-shadow:0 24px 70px rgba(30,40,55,.12)}.finalRank{font-size:78px;line-height:.9;font-weight:1000;letter-spacing:-5px;color:#e10600}.finalPanel h1{font-size:34px;margin:12px 0 7px}.finalPanel p{font-size:14px;color:#5e6875;line-height:1.8}.finalStats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0}.finalStats div{background:#f6f8fa;border:1px solid #e0e5ea;border-radius:9px;padding:12px}.finalStats span{display:block;font-size:10.5px;color:#7d8793}.finalStats b{font-size:20px}.finalActions{display:flex;gap:8px;justify-content:flex-end}
+.eventProgress{font-size:11px;color:#7d8792;margin-bottom:8px}.eventConsequence{font-size:11px;color:#9b4b47;margin-top:5px}.resultrow .status{width:46px;text-align:right;font-size:11px;color:#7b8491}
+@media(max-width:900px){.modules,.weeklyChoices,.car6grid,.contractMarket,.historyCards,.finalStats{grid-template-columns:1fr 1fr}.teamRelationHero,.contractTop,.standingsLayout{grid-template-columns:1fr}.forecastStrip{grid-template-columns:1fr}.module{min-height:190px}}
+@media(max-width:560px){.modules,.weeklyChoices,.car6grid,.contractMarket,.historyCards,.finalStats,.rivalStats{grid-template-columns:1fr}}
+
+
+/* v10 mobile + profile hotfix */
+.profileDriverOnly{margin-top:21px;padding-top:21px;border-top:1px solid #e0e4ea;max-width:720px}
+.playerCarCard{margin-bottom:12px}
+body{overflow-x:hidden}
+.teamperf10,.perfwrap{max-width:100%;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+
+@media(max-width:760px){
+  .top{height:52px;padding:0 12px}.logo{font-size:19px}.topright{font-size:10.5px;letter-spacing:1px}
+  .wrap,.raceStageWrap{width:100%;max-width:none;padding:14px 12px 28px}
+  .homegrid{display:block;min-height:auto}.hero{padding:22px 0 10px}.hero h1{font-size:clamp(38px,12vw,52px);letter-spacing:-2px;line-height:.92}.hero p{font-size:14px}.menuitem{width:100%;padding:15px;margin:8px 0}
+  .profilebox{padding:18px 16px;border-radius:12px}.profiletitle{gap:10px;align-items:flex-start}.drivername{font-size:28px;line-height:1.05}.year b{font-size:22px}.profileDriverOnly{margin-top:16px;padding-top:16px}.profileactions{display:grid;grid-template-columns:1fr;gap:8px}.profileactions .btn{width:100%}
+  .attr{grid-template-columns:58px 1fr 32px;gap:8px;margin:9px 0}
+  .careerHeader,.modulehead,.raceStageTop,.relationhead,.driverdetailtop{align-items:flex-start;flex-wrap:wrap;gap:10px}.seasoninfo{text-align:left}.careerTools{justify-content:flex-start;flex-wrap:wrap}.careerTools .mini{flex:1;min-width:84px}
+  .hubtop,.quick,.modulegrid,.trainingHero,.teamRelationHero,.contractTop,.standingsLayout,.stageBody,.resultHero,.detailgrid{grid-template-columns:1fr!important}
+  .modules{grid-template-columns:1fr!important;gap:10px}.module{min-height:178px;padding:15px}.module h2{font-size:18px;margin-top:12px}.module .moduleSubAction{bottom:42px}
+  .drivercard{align-items:flex-start;gap:10px}.driverstats{grid-template-columns:repeat(3,1fr);gap:6px}.driverstat{min-width:0}.driverstat b{font-size:16px}
+  .car6grid{grid-template-columns:repeat(2,1fr)!important}.car6{padding:10px 9px}.car6 b{font-size:18px}
+  .teamperf10 table,.perftable{min-width:720px}.teamperf10 th,.teamperf10 td,.perftable th,.perftable td{padding:8px 7px}
+  .teamperf10 th:nth-child(1),.teamperf10 td:nth-child(1){position:sticky;left:0;z-index:2;background:#fff}.teamperf10 th:nth-child(2),.teamperf10 td:nth-child(2){position:sticky;left:34px;z-index:2;background:#fff;box-shadow:4px 0 7px rgba(30,38,52,.05)}.teamperf10 tr.mine td:nth-child(-n+2){background:#fff1f0}
+  .forecastStrip,.weeklyChoices,.contractMarket,.historyCards,.finalStats,.rivalStats,.trainplans{grid-template-columns:1fr!important}
+  .stageContext{grid-template-columns:1fr!important}.raceStageHero{padding:18px 15px}.raceStageHero h1{font-size:27px;line-height:1.05}.stageBrief,.gridPreview,.resultSummary,.finishCard{padding:15px}.strategygrid{grid-template-columns:1fr!important}.strategychoice{min-height:auto;padding:13px}.stagego{min-height:46px}
+  .resultMeta{grid-template-columns:repeat(3,1fr);gap:5px}.finishPos{font-size:52px}.resultrow{grid-template-columns:36px minmax(0,1fr) 70px 42px;gap:5px;padding:8px 5px}.gridPreview .resultrow{grid-template-columns:34px minmax(0,1fr) 74px}.resultrow b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .detailstats{grid-template-columns:repeat(2,1fr)!important}.historygrid{grid-template-columns:repeat(2,1fr)}.drivernumber{font-size:38px}.driverdetail{padding:14px}.detailactions{flex-direction:column}.detailactions .btn{width:100%}
+  .calendargrid,.racecalendar .calendargrid{grid-template-columns:1fr 1fr}.cal{min-height:64px}
+  .savegrid{grid-template-columns:1fr!important;padding:10px}.savecard{min-height:auto}
+  .btn{min-height:40px}.mini{min-height:34px;padding:7px 9px}.actionrow{flex-wrap:wrap}.meta{flex-wrap:wrap;gap:6px 10px}.devitem button,.trainitem button{float:none;margin:10px 0 0;width:100%}
+  .overlay{align-items:flex-end}.modal{width:100%;max-width:none;max-height:90dvh;border-radius:16px 16px 0 0;border-bottom:0}.modalhead{padding:14px 15px}.drivergrid{grid-template-columns:1fr;padding:10px}.driverchoice{padding:13px}
+  .finalPanel{margin:12px;padding:20px 16px}.finalRank{font-size:54px}
+}
+
+@media(max-width:430px){
+  .topright{display:none}.logo{font-size:18px}.top{height:50px}
+  .wrap,.raceStageWrap{padding-left:10px;padding-right:10px}.hero h1{font-size:40px}.profiletitle{display:block}.year{text-align:left;margin-top:12px}.year b{display:inline;margin-left:7px;font-size:18px}
+  .driverstats{grid-template-columns:repeat(2,1fr)}.driverstats .driverstat:first-child{grid-column:1/-1}
+  .calendargrid,.racecalendar .calendargrid{grid-template-columns:1fr}.car6grid{grid-template-columns:1fr 1fr!important}
+  .resultMeta{grid-template-columns:1fr 1fr}.resultMeta div:last-child{grid-column:1/-1}.resultrow{grid-template-columns:34px minmax(0,1fr) 58px}.resultrow .status{display:none}.gridPreview .resultrow{grid-template-columns:32px minmax(0,1fr) 62px}
+  .careerTools{width:100%}.careerTools .mini{min-width:0}.modulehead>.btn,.raceStageTop>.btn{width:100%}
+  .weeklyChoice{padding:11px}.contextbox{padding:9px}.finishPos{font-size:46px}
+}
+
+
+.devModeButtons{display:flex;gap:6px}.devModeButtons .active{background:#e10600;color:#fff;border-color:#e10600}.futureFundRow{display:grid;grid-template-columns:1fr 1fr auto;gap:9px;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #e1e5eb}.futureFundRow>div{background:#f6f8fa;border:1px solid #e0e5eb;border-radius:8px;padding:9px}.futureFundRow span{display:block;font-size:10.5px;color:#77818f}.futureFundRow b{display:block;margin-top:3px;font-size:16px}.project.future{border-left-color:#5366d6}.project.current{border-left-color:#e10600}.projectSlot{font-size:10.5px;display:inline-block;padding:2px 5px;border-radius:8px;background:#eef1f5;color:#697382;margin-left:5px}.newsTickerWrap{margin-top:18px;border:1px solid #dce2e8;border-radius:10px;background:#f7f9fb;overflow:hidden}.newsTickerHead{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-bottom:1px solid #e2e6ec}.newsTicker{overflow:hidden;white-space:nowrap;padding:11px 0}.newsTrack{display:inline-flex;gap:42px;padding-left:100%;animation:v11Ticker 42s linear infinite}.newsTrack:hover{animation-play-state:paused}.newsItem{font-size:12px;color:#394352}.newsItem b{color:#e10600;margin-right:5px}@keyframes v11Ticker{from{transform:translateX(0)}to{transform:translateX(-100%)}}.choiceOutcome{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px}.choiceOutcome span{font-size:10.5px;padding:5px 6px;border-radius:6px;background:#f2f5f8;color:#637080}.choiceOutcome .gain{border-left:2px solid #17995d}.choiceOutcome .loss{border-left:2px solid #e10600}.contractPending{padding:10px;border:1px solid #e5c46d;background:#fff9e9;border-radius:8px;margin:10px 0;font-size:11px;color:#6f5b28}.contractReality{font-size:10.5px;color:#7a8490;line-height:1.6;margin-top:5px}.seasonBadge{display:inline-block;padding:3px 7px;border-radius:12px;background:#f1f3f6;color:#596574;font-size:11px;margin-left:6px}.nextResearchGrid{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:10px}.nextResearchGrid div{padding:8px;background:#f6f8fa;border:1px solid #e0e5eb;border-radius:7px}.nextResearchGrid span{display:block;font-size:10.5px;color:#818b97}.nextResearchGrid b{font-size:15px}.seasonRolloverNote{margin-top:10px;font-size:11px;line-height:1.7;color:#6c7683}
+@media(max-width:700px){.futureFundRow{grid-template-columns:1fr 1fr}.futureFundRow button{grid-column:1/-1;width:100%}.devModeButtons{width:100%}.devModeButtons .mini{flex:1}.nextResearchGrid{grid-template-columns:repeat(2,1fr)}.newsTrack{animation-duration:54s}.choiceOutcome{grid-template-columns:1fr}}
+
+
+
+/* v12 compact career dashboard */
+.compactModules{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;margin-top:10px}
+.compactModules .module{min-height:148px!important;padding:13px 14px 42px!important;border-radius:12px!important}
+.compactModules .module h2{font-size:18px!important;margin:9px 0 6px!important}
+.compactModules .module p{font-size:11.5px!important;line-height:1.5!important;margin:0!important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.compactModules .modnum{font-size:10.5px!important}.compactModules .statusline{left:14px!important;right:14px!important;bottom:11px!important;padding-top:8px!important}
+.compactModules .moduleSubAction{right:12px!important;bottom:36px!important}.compactModules .moduleSubAction .mini{padding:5px 7px!important}
+.raceModuleCard.locked{opacity:.68;filter:saturate(.72);cursor:not-allowed}.raceModuleCard.locked:before{content:'LOCKED';position:absolute;right:11px;top:11px;background:#1f2937;color:#fff;border-radius:999px;padding:3px 7px;font-size:10.5px;letter-spacing:1px;font-weight:900}.raceModuleCard.ready:before{content:'READY';position:absolute;right:11px;top:11px;background:#16834a;color:#fff;border-radius:999px;padding:3px 7px;font-size:10.5px;letter-spacing:1px;font-weight:900}
+.hubPaddock{display:grid;grid-template-columns:minmax(220px,.72fr) minmax(0,1.28fr);gap:10px;margin:10px 0 12px;padding:10px;border:1px solid #d8dee6;border-radius:14px;background:linear-gradient(135deg,#fdfefe,#edf2f6);box-shadow:0 8px 24px rgba(36,47,62,.06);overflow:hidden}
+.hubPaddockLead{min-height:116px;border-radius:11px;padding:13px 14px;background:#181c23;color:#fff;position:relative;overflow:hidden}.hubPaddockLead:after{content:'F1';position:absolute;right:-6px;bottom:-23px;font-size:78px;font-weight:950;font-style:italic;color:rgba(255,255,255,.045)}
+.hubPaddockLead .kicker{color:#ff5752}.hubPaddockTitle{font-size:19px;font-weight:950;margin:7px 0 5px;position:relative;z-index:1}.hubPaddockText{font-size:12px;line-height:1.65;color:#d2d7df;position:relative;z-index:1}.hubPaddockMeta{font-size:10.5px;letter-spacing:1.5px;color:#9da6b2;margin-top:9px;position:relative;z-index:1}
+.hubPaddockRail{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;padding:1px 1px 5px;align-items:stretch}
+.paddockTicker{grid-column:1/-1;overflow:hidden;white-space:nowrap;border-top:1px solid #dbe1e7;padding-top:8px}.paddockTickerTrack{display:inline-flex;gap:38px;padding-left:100%;animation:v12Ticker 48s linear infinite;font-size:10.5px;color:#66717e}.paddockTickerTrack b{color:#e10600;margin-right:5px}@keyframes v12Ticker{from{transform:translateX(0)}to{transform:translateX(-55%)}}.hubPaddockRail::-webkit-scrollbar{height:4px}.hubPaddockRail::-webkit-scrollbar-thumb{background:#cbd2da;border-radius:5px}.paddockCard{flex:0 0 205px;scroll-snap-align:start;background:#fff;border:1px solid #dce2e8;border-radius:10px;padding:11px;min-height:112px}.paddockCard .type{font-size:10.5px;font-weight:950;letter-spacing:1.4px;color:#e10600}.paddockCard b{display:block;font-size:13px;margin:7px 0 4px}.paddockCard p{font-size:11px;line-height:1.55;color:#687381;margin:0}.paddockCard small{display:block;margin-top:8px;color:#9aa3ae;font-size:10.5px}
+.attrRankGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.attrRankItem{border:1px solid #dce2e8;background:#fff;border-radius:8px;padding:9px}.attrRankItem.focus{border-color:#e6aaa8;background:#fff8f7}.attrRankItem span{display:block;font-size:10.5px;color:#7a8592}.attrRankItem b{display:flex;justify-content:space-between;align-items:end;margin-top:4px;font-size:16px}.attrRankItem em{font-style:normal;font-size:11px;color:#e10600}.attrRankItem small{display:block;margin-top:4px;color:#98a1ac;font-size:10.5px}.sprintHero{background:linear-gradient(135deg,#1d2632,#3a2230)!important}.sprintResultMini{margin-top:12px;border:1px solid #dce2e8;border-radius:10px;background:#fff;padding:12px}.sprintResultMini h3{margin:0 0 7px}.sprintPts{font-size:22px;font-weight:950;color:#e10600}.eventGateNotice{padding:10px 11px;border:1px solid #efc0bd;background:#fff6f5;color:#8e312e;border-radius:8px;font-size:11px;line-height:1.55;margin-top:8px}
+@media(max-width:760px){
+ .hubPaddock{grid-template-columns:1fr!important;padding:8px}.hubPaddockLead{min-height:104px}.hubPaddockRail{margin:0 -1px}.paddockCard{flex-basis:74vw;max-width:260px}
+ .compactModules{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}.compactModules .module{min-height:134px!important;padding:11px 11px 39px!important}.compactModules .module h2{font-size:18px!important;margin-top:7px!important}.compactModules .module p{font-size:10.5px!important;-webkit-line-clamp:2}.compactModules .statusline{font-size:10.5px!important;left:11px!important;right:11px!important}.compactModules .moduleSubAction{right:9px!important;bottom:35px!important}.compactModules .module:last-child:nth-child(odd){grid-column:span 2}.attrRankGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:390px){.compactModules .module{min-height:128px!important}.compactModules .module h2{font-size:17px!important}.paddockCard{flex-basis:78vw}.attrRankItem{padding:8px}}
+
+
+
+/* 13.28.7 — responsive readability pass. Keep content readable rather than shrinking it to fit. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{font-size:15px!important;line-height:1.5}
+button,.btn,input,select,textarea{font-size:13px!important}
+button,.btn{min-height:36px}
+input,select,textarea{min-height:38px}
+p,.small,.news,.hint,.meta,.statusline{line-height:1.6}
+
+/* Dense tables should scroll instead of collapsing text. */
+.teamperf10,.perfwrap,.histTableWrapV1312,.strategyTableWrapV41317,.standingsTableWrap,.tableWrap{overflow-x:auto!important;-webkit-overflow-scrolling:touch}
+.teamperf10 table,.perftable,.histTableV1312,.strategyTableV41317,.standingTable{font-size:12px!important}
+.teamperf10 th,.perftable th,.histTableV1312 th,.strategyTableV41317 th,.standingTable th{font-size:11px!important}
+.teamperf10 td,.perftable td,.histTableV1312 td,.strategyTableV41317 td,.standingTable td{line-height:1.45}
+
+/* Common dense labels across career / race / market screens. */
+.menuitem span,.module p,.statusline,.news,.standmini,.meta,.project,.project small,.hint,
+.contextbox span,.stageBrief p,.strategychoice .approach,.historyRace span,.historyRace small,.aiNews span,
+.contractOfferV40 .offerSubV40,.contractRoleV40,.settingsNote13285,.contractRealityLock13286,
+.modnum,.attr,.part{font-size:12px!important}
+.menuitem b,.devitem h3,.trainitem h3,.contractOfferV40 h3{font-size:17px!important}
+
+@media (min-width:761px){
+  .wrap,.raceStageWrap{max-width:1180px}
+  .hero p{font-size:14px!important;max-width:620px}
+  .menuitem{padding:18px 20px}
+  .module{min-height:204px}
+  .compactModules .module{min-height:150px!important}
+  .card{line-height:1.5}
+}
+
+@media (max-width:760px){
+  body{font-size:15px!important}
+  .top{min-height:54px!important;height:auto!important;padding:9px 12px!important}
+  .logo{font-size:20px!important;line-height:1.05}
+  .wrap,.raceStageWrap{padding:14px 12px 30px!important}
+  .hero{padding-top:18px!important}
+  .hero h1{font-size:40px!important;line-height:.94!important}
+  .hero p{font-size:14px!important;line-height:1.65!important}
+  .menuitem{padding:15px 15px!important;margin:8px 0!important;min-height:66px}
+  .menuitem b{font-size:17px!important}
+  .menuitem span{font-size:13px!important;line-height:1.5!important}
+  .modulehead h1{font-size:25px!important}
+  .drivercard h2,.module h2{font-size:18px!important}
+  .module p,.statusline,.news,.standmini,.meta,.project,.hint,.small{font-size:12.5px!important}
+  #career .compactModules{grid-template-columns:1fr 1fr!important;gap:9px!important}
+  #career .compactModules .module{min-height:142px!important;padding:12px 11px 38px!important}
+  #career .compactModules .module h2{font-size:17px!important}
+  #career .compactModules .module p{font-size:11.5px!important;line-height:1.5!important}
+  #career .compactModules .statusline{left:11px!important;right:11px!important;bottom:10px!important;font-size:11px!important}
+  .stageContext{grid-template-columns:1fr!important}
+  .contextbox span{font-size:11.5px!important}.contextbox b{font-size:14px!important}
+  .stageBrief p,.strategychoice .approach{font-size:12.5px!important}
+  button,.btn{font-size:13px!important;min-height:40px;padding:9px 12px!important}
+  input,select,textarea{font-size:16px!important;min-height:42px}
+  .teamperf10 table,.perftable,.histTableV1312,.strategyTableV41317,.standingTable{font-size:12px!important}
+  .teamperf10 th,.perftable th,.histTableV1312 th,.strategyTableV41317 th,.standingTable th{font-size:11px!important}
+  .settingsPanel13286{padding:18px!important}
+  .settingsTitle13286 h2{font-size:23px!important}
+  .nameLangSwitch13285 button{font-size:13px!important;min-width:86px}
+}
+
+@media (max-width:420px){
+  .wrap,.raceStageWrap{padding-left:10px!important;padding-right:10px!important}
+  .hero h1{font-size:36px!important}
+  #career .compactModules{grid-template-columns:1fr!important}
+  #career .compactModules .module{min-height:126px!important}
+  .stageBody,.modulegrid,.quick,.standingsLayout{grid-template-columns:1fr!important}
+}
+
+
+@font-face { font-family: TencentSans; src: url("moz-extension://fcd92228-f57f-4a82-a769-0eb4a7952cd8/static/fonts/TencentSans.woff2"); }
+
+
+
+#resultDecision{display:none!important}
+.affairSummaryGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.affairGauge{min-height:176px}.affairExplain{font-size:11px;line-height:1.6;color:#727c89;margin-top:12px}.trustScale>div{background:linear-gradient(90deg,#b64036,#d5a434,#159a5b)}
+.affairsPanel{margin-bottom:12px}.affairEvent{border:1px solid #dce1e7;background:#fff;border-radius:11px;padding:15px;margin-top:9px}.affairEvent.resolved{background:#f7f9fb}.affairEventHead{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.affairEvent h3{font-size:16px;margin:4px 0 5px}.affairEvent p{font-size:12px;color:#65707d;line-height:1.6;margin:0}.affairType{display:inline-block;padding:3px 7px;border-radius:999px;background:#f0f3f6;color:#5d6876;font-size:10.5px;white-space:nowrap}.affairType.trust{background:#eef4ff;color:#46618d}.affairType.driver{background:#fff1f0;color:#9c4f4a}.affairChoices{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.affairChoice{border:1px solid #dce1e7;background:#f8f9fb;border-radius:8px;padding:10px;cursor:pointer;transition:.15s}.affairChoice:hover{background:#fff;border-color:#e10600;transform:translateY(-1px)}.affairChoice b{display:block;font-size:12px}.affairChoice>span{display:block;color:#6c7684;font-size:10.5px;line-height:1.45;margin-top:4px}.affairEffects{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-top:7px}.affairEffects small{font-size:10.5px;line-height:1.4;padding:4px 5px;border-radius:5px;background:#eef2f5;color:#5f6a78}.affairOutcome{margin-top:9px;padding:9px 10px;border-left:3px solid #159a5b;background:#f2f8f5;font-size:11px;line-height:1.55;color:#55616d}.affairEmpty{padding:22px 14px;border:1px dashed #cfd6df;border-radius:10px;text-align:center;color:#6f7987;font-size:12px;line-height:1.6}.affairImpactGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.affairImpactGrid>div{background:#f7f9fb;border:1px solid #e0e5ea;border-radius:9px;padding:11px}.affairImpactGrid span{display:block;font-size:10.5px;color:#7c8693}.affairImpactGrid b{display:block;font-size:18px;margin-top:3px}.affairImpactGrid small{display:block;color:#77818e;font-size:10.5px;margin-top:4px}.v13FundRow{grid-template-columns:.7fr .7fr 1.4fr}.fundTransfer{display:grid!important;grid-template-columns:.72fr 1.28fr;gap:7px;align-items:end}.fundTransfer label{display:block}.fundTransfer label>span{display:block;font-size:10.5px;color:#77818f;margin-bottom:4px}.fundTransferInput{display:flex;align-items:center;background:#fff;border:1px solid #d7dde5;border-radius:7px;overflow:hidden}.fundTransferInput input{width:100%;min-width:0;border:0;outline:0;padding:7px 8px;background:transparent;color:#1b2028;font:inherit;font-size:12px}.fundTransferInput em{padding-right:8px;font-size:10.5px;color:#7a8490;font-style:normal}.fundTransfer .mini{min-height:32px}.fundRule{margin-top:8px;line-height:1.55}.budgetDividend{margin-top:8px;padding:9px 10px;background:#f5f8fb;border:1px solid #dce3ea;border-radius:8px;font-size:11px;color:#596675;line-height:1.55}
+@media(max-width:760px){.affairSummaryGrid,.affairChoices,.affairImpactGrid{grid-template-columns:1fr}.v13FundRow{grid-template-columns:1fr 1fr}.fundTransfer{grid-column:1/-1}.affairGauge{min-height:auto}}
+@media(max-width:430px){.v13FundRow{grid-template-columns:1fr}.fundTransfer{grid-column:auto;grid-template-columns:1fr}.affairEvent{padding:12px}}
+
+
+
+
+.view.active{animation:viewInV14 .11s ease-out both}@keyframes viewInV14{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+.overlay.open{animation:veilInV14 .08s ease both}.overlay.open .modal{animation:modalInV14 .11s ease-out both}@keyframes veilInV14{from{opacity:0}to{opacity:1}}@keyframes modalInV14{from{opacity:.7;transform:translateY(5px) scale(.995)}to{opacity:1;transform:none}}
+.sessionTransition{transition:opacity .07s ease}.sessionTransition.show .transitionLine i{animation:transitionSweepV14 .18s ease forwards}@keyframes transitionSweepV14{to{width:100%}}
+.module,.card,.btn,.mini,.strategychoice,.weeklyChoice,.affairChoice{transition-duration:.09s!important}
+.devOverviewGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:12px}.devOverviewCard{padding:13px 14px}.devOverviewCard>span{display:block;font-size:10.5px;color:#7b8592;letter-spacing:.5px}.devOverviewCard>b{display:block;font-size:22px;margin-top:3px}.devOverviewCard>small{display:block;font-size:10.5px;color:#747e8c;margin-top:4px;line-height:1.45}.v14FundRow{grid-template-columns:.75fr .75fr 1.5fr}.devInlineNotice{min-height:18px;margin-top:7px;font-size:11px;color:#66717e}.devWorkbench{grid-template-columns:1.08fr .92fr}.devPartV14{border:1px solid #dce2e8;background:#fafbfd;border-radius:10px;padding:12px;margin-top:8px}.devPartTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.devPartV14 h3{margin:0;font-size:14px}.devPartValue{font-size:20px;font-weight:950}.devPartMeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.devPartMeta span{font-size:10.5px;padding:4px 6px;border:1px solid #dfe4ea;background:#fff;border-radius:999px;color:#65707d}.devPartAction{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:9px}.devPartAction small{font-size:10.5px;color:#75808d;line-height:1.4}.devProjectOption{border:1px solid #dce1e7;background:#f8f9fb;border-radius:9px;padding:12px;margin-top:8px;cursor:pointer}.devProjectOption:hover{border-color:#e10600;background:#fff}.devProjectOption.disabled{opacity:.48;cursor:not-allowed}.devProjectOptionHead{display:flex;justify-content:space-between;gap:10px}.devProjectOption h3{margin:0;font-size:14px}.devProjectOption strong{font-size:14px;color:#e10600}.devOptionMeta{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.devOptionMeta span{font-size:10.5px;padding:4px 6px;background:#eef2f5;border-radius:6px;color:#5f6a77}.projectV14{padding:11px 12px;border:1px solid #dce2e8;border-left:3px solid #e10600;border-radius:8px;background:#fafbfd;margin-top:8px}.projectV14.future{border-left-color:#5366d6}.projectV14 b{display:block;font-size:12px}.projectV14 small{display:block;font-size:10.5px;color:#707b88;margin-top:4px}.projectProgress{height:5px;background:#e6eaf0;border-radius:8px;overflow:hidden;margin-top:8px}.projectProgress i{display:block;height:100%;background:#e10600}.projectV14.future .projectProgress i{background:#5366d6}.devHistory{margin-top:10px}.devHistoryRow{padding:8px 0;border-top:1px solid #e7eaee;font-size:10.5px;color:#65717e;line-height:1.45}.devHistoryRow b{color:#20252d}.affairSystemEffect{margin-top:10px;padding:8px 9px;border:1px solid #dfe4ea;background:#f7f9fb;border-radius:7px;font-size:11px;font-weight:750;color:#47515e}.v14AffairSummary .affairGauge{min-height:195px}.affairBottomGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.affairsHistoryRow{padding:9px 0;border-bottom:1px solid #e7eaef;font-size:10.5px;line-height:1.5;color:#626e7b}.affairsHistoryRow:last-child{border-bottom:0}.affairsHistoryRow b{color:#20252d}.affairEffectsV14{display:flex;gap:4px;flex-wrap:wrap;margin-top:7px}.affairEffectsV14 small{font-size:10.5px;padding:4px 5px;border-radius:5px;background:#eef2f5;color:#5f6a78}.seasonCompleteActions{display:flex;justify-content:flex-end;gap:7px;margin-top:12px;padding-top:12px;border-top:1px solid #e2e6eb}.toastV14{position:fixed;left:50%;bottom:22px;transform:translate(-50%,8px);z-index:120;background:#1e232b;color:#fff;padding:8px 12px;border-radius:999px;font-size:11px;opacity:0;pointer-events:none;transition:.12s ease}.toastV14.show{opacity:.94;transform:translate(-50%,0)}
+@media(max-width:760px){.devOverviewGrid,.affairBottomGrid{grid-template-columns:1fr}.devWorkbench{grid-template-columns:1fr!important}.v14FundRow{grid-template-columns:1fr 1fr}.v14FundRow .fundTransfer{grid-column:1/-1}.devPartAction{align-items:flex-end}.v14AffairSummary .affairGauge{min-height:auto}}
+@media(max-width:430px){.v14FundRow{grid-template-columns:1fr}.v14FundRow .fundTransfer{grid-column:auto}.devPartTop{align-items:center}.devPartAction{display:block}.devPartAction .mini{width:100%;margin-top:8px}.seasonCompleteActions{display:grid;grid-template-columns:1fr}.seasonCompleteActions .btn{width:100%}}
+
+
+
+
+.hubPaddock{grid-template-columns:1fr!important;padding:0!important;border:none!important;background:transparent!important;box-shadow:none!important;margin:10px 0 14px!important}
+.hubPaddockLead,.hubPaddockRail{display:none!important}
+.paddockTicker{grid-column:1/-1;border:1px solid #d8dee6;border-radius:14px;background:linear-gradient(135deg,#fff,#f5f8fb);padding:12px 0 10px!important;overflow:hidden}
+.paddockTickerTrack{font-size:12.5px!important;gap:54px!important;animation-duration:40s!important}
+.paddockTickerTrack b{font-size:12.5px}
+.marketCold{opacity:.7;filter:saturate(.35)}
+.marketHot{border-color:#f0b0ae!important;box-shadow:inset 0 0 0 1px rgba(225,6,0,.08),0 10px 24px rgba(225,6,0,.07)!important}
+.marketHot .modnum,.marketHot h2{color:#e10600}
+.playerCarPerfInline{margin-top:12px;padding-top:12px;border-top:1px solid #e5e9ee}
+.attrRankSub{display:block;font-size:10.5px;color:#7f8895;margin-top:4px}
+.contractSimpleTop{display:grid;grid-template-columns:1fr .8fr;gap:12px;margin-bottom:12px}
+.contractOfferGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.contractOfferV15{background:#fff;border:1px solid #dde3ea;border-radius:12px;padding:14px}
+.contractOfferV15.best{border-color:#edb0ae;box-shadow:inset 3px 0 #e10600}
+.contractOfferV15.safe{border-color:#dadfe7;box-shadow:inset 3px 0 #788391}
+.contractOfferV15.renew{border-color:#a8d4ba;box-shadow:inset 3px 0 #159a5b}
+.contractOfferV15 h3{margin:3px 0 6px;font-size:17px}
+.contractOfferMeta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.contractOfferMeta div{background:#f6f8fa;border:1px solid #e3e7ec;border-radius:8px;padding:8px}
+.contractOfferMeta span{display:block;font-size:10.5px;color:#7a8491}
+.contractOfferMeta b{font-size:15px}
+.contractLogV15{margin-top:12px;padding-top:10px;border-top:1px solid #e6eaf0}
+.contractLogV15 .row{padding:8px 0;border-bottom:1px dashed #e3e7ed;font-size:12px;color:#5e6875}
+.contractClosedBox{padding:20px;border:1px dashed #d8dee6;background:#f7f9fb;border-radius:12px;text-align:center;color:#697481}
+@media(max-width:900px){.contractSimpleTop,.contractOfferGrid{grid-template-columns:1fr}}
+
+
+
+
+.v14FundRow{display:none!important}
+.raceModuleCard{background:linear-gradient(145deg,#ef110b,#c50703)!important;border-color:#e10600!important;color:#fff!important;box-shadow:0 12px 28px rgba(225,6,0,.20)!important}
+.raceModuleCard:hover{border-color:#a90400!important;box-shadow:0 16px 34px rgba(225,6,0,.28)!important}
+.raceModuleCard .modnum,.raceModuleCard h2,.raceModuleCard p,.raceModuleCard .statusline,.raceModuleCard .statusline b{color:#fff!important}
+.raceModuleCard .statusline{border-color:rgba(255,255,255,.28)!important}.raceModuleCard:after{border-color:rgba(255,255,255,.10)!important}
+.raceModuleCard.locked{opacity:1!important;filter:none!important;background:linear-gradient(145deg,#c90b06,#9e0905)!important}
+.raceModuleCard.ready:before,.raceModuleCard.locked:before{background:rgba(255,255,255,.18)!important;color:#fff!important;border:1px solid rgba(255,255,255,.34)}
+.raceModuleCard .moduleSubAction .mini{background:#fff!important;color:#c30b06!important;border-color:#fff!important;font-weight:900}
+.mandatoryBadge,.devRemainBadge{position:absolute;right:11px;top:11px;z-index:5;border-radius:6px;padding:4px 8px;font-size:10.5px;font-weight:950;letter-spacing:.6px}
+.mandatoryBadge.pending{background:#e10600;color:#fff;box-shadow:0 5px 14px rgba(225,6,0,.22)}
+.mandatoryBadge.done{background:#16834a;color:#fff}.devRemainBadge{background:#202732;color:#fff}
+.affairGauge.required .status.pending{color:#d60903}.affairGauge.required .status.done{color:#148c51}
+.affairRequiredNote{margin-top:10px;padding:9px 10px;border-radius:8px;background:#fff3f2;border:1px solid #f1c0be;color:#9f302d;font-size:11px;line-height:1.55}
+.affairRequiredNote.done{background:#eff9f3;border-color:#bee3cc;color:#287149}
+.affairModsGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.affairModCell{background:#f7f9fb;border:1px solid #dfe4ea;border-radius:8px;padding:9px}.affairModCell span{display:block;font-size:10.5px;color:#7b8592}.affairModCell b{display:block;margin-top:3px;font-size:16px}.affairModCell b.up{color:#138b51}.affairModCell b.down{color:#c73b35}.affairModCell b.flat{color:#6f7885}
+.v16Effects{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.v16Effects small{padding:4px 6px;border-radius:6px;background:#f0f3f6;color:#5d6875;font-size:10.5px}.v16Effects small.up{border-left:2px solid #159a5b}.v16Effects small.down{border-left:2px solid #e10600}
+.relationHistoryV16{padding:9px 0;border-bottom:1px solid #e7ebef;font-size:11px;color:#606a77;line-height:1.55}.relationHistoryV16 b{color:#242a32}
+@media(max-width:700px){.affairModsGrid{grid-template-columns:1fr 1fr}.mandatoryBadge,.devRemainBadge{top:9px;right:9px}.raceModuleCard .moduleSubAction{right:11px!important}}
+
+
+
+
+/* Hub: keep four primary decisions; standings moves to the utility row. */
+#career .compactModules{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#career .compactModules>.module:nth-child(5){display:none!important}
+.seasonShortcutV17{font-weight:800}
+
+/* R&D: remove duplicated/low-value panels and keep the workbench compact. */
+#development .devOverviewGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#development .devOverviewCard:nth-child(3){display:none!important}
+#development .devWorkbench{grid-template-columns:1fr!important}
+#development .devHistory{display:none!important}
+#development .devSeasonControl{padding:13px 14px!important}
+#development .playerCarCard{margin-bottom:9px!important}
+.devBudgetGuaranteeV17{margin-top:5px;font-size:10.5px;color:#697482;line-height:1.5}
+.projectV17Range{color:#d70b06;font-weight:850}
+
+/* Team affairs: the mandatory decision is the main object; relationship remains secondary. */
+#media .affairSummaryGrid{grid-template-columns:1fr!important}
+#media .affairSummaryGrid .affairGauge:first-child{display:none!important}
+#media .affairBottomGrid{grid-template-columns:1fr!important}
+#media .affairBottomGrid .card:nth-child(2){display:none!important}
+#media .affairsPanel{border-color:#efc2c0!important;box-shadow:0 10px 26px rgba(225,6,0,.06)!important}
+.eventToneV17{display:inline-block;margin-left:6px;padding:3px 6px;border-radius:999px;font-size:10.5px;font-weight:900;letter-spacing:.5px}
+.eventToneV17.positive{background:#e9f7ef;color:#16834a}
+.eventToneV17.negative{background:#fff0ef;color:#b82822}
+.eventToneV17.mixed{background:#f1f3f6;color:#65707d}
+
+/* Market: one decision screen, not another dashboard. */
+.contractV17Head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:12px;padding:15px 16px;background:#fff;border:1px solid #dce2e8;border-radius:12px}
+.contractV17Head h2{margin:3px 0;font-size:20px}.contractV17Head p{margin:0;color:#697482;font-size:11px;line-height:1.6}
+.contractV17State{text-align:right}.contractV17State span{display:block;color:#7b8591;font-size:10.5px}.contractV17State b{font-size:16px}
+.contractOfferGridV17{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.contractOfferV17{background:#fff;border:1px solid #dde3ea;border-radius:11px;padding:13px;min-height:190px}
+.contractOfferV17.best{box-shadow:inset 3px 0 #e10600}.contractOfferV17.safe{box-shadow:inset 3px 0 #788391}.contractOfferV17.renew{box-shadow:inset 3px 0 #159a5b}
+.contractOfferV17 h3{font-size:17px;margin:5px 0}.contractOfferV17 p{font-size:11px;color:#697482;line-height:1.55;min-height:43px}
+.contractChanceV17{display:flex;justify-content:space-between;align-items:center;margin:10px 0;padding:8px;background:#f6f8fa;border:1px solid #e2e6eb;border-radius:8px;font-size:10.5px;color:#78828f}.contractChanceV17 b{font-size:16px;color:#20252d}
+.contractRoundLockV17{padding:10px 12px;margin-bottom:10px;border-radius:9px;background:#fff7e7;border:1px solid #ecd397;color:#7d6326;font-size:11px;line-height:1.55}
+.contractConfirmV17{padding:16px}.contractConfirmV17 h2{font-size:22px;margin:5px 0 8px}.contractConfirmV17 p{font-size:12px;color:#68727f;line-height:1.7}.contractConfirmMeta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.contractConfirmMeta div{padding:10px;background:#f6f8fa;border:1px solid #dfe4ea;border-radius:8px}.contractConfirmMeta span{display:block;font-size:10.5px;color:#7a8491}.contractConfirmMeta b{font-size:17px}.contractConfirmActions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+@media(max-width:760px){#development .devOverviewGrid{grid-template-columns:1fr 1fr!important}.contractOfferGridV17{grid-template-columns:1fr}.contractV17Head{align-items:flex-start}.contractV17State{text-align:left}.contractConfirmMeta{grid-template-columns:1fr 1fr}}
+
+
+
+
+/* Remove the two explanatory lines marked in the screenshots. */
+#development .devPartAction small{display:none!important}
+#development .devPartAction{display:block!important}
+#development .devPartAction .mini{width:100%!important}
+
+/* Slightly smaller, denser presentation on every page. */
+.wrap{max-width:1080px!important;padding:18px 22px 34px!important}
+.top{height:54px!important}.logo{font-size:21px!important}
+.careerHeader h1,.modulehead h1{font-size:25px!important}
+.card{padding:14px!important}.sectiontitle{font-size:17px!important}
+.module{min-height:176px!important;padding:14px 15px!important}.module h2{font-size:18px!important}
+.devOverviewCard{padding:11px 12px!important}.devOverviewCard>b{font-size:20px!important}
+.devPartV14{padding:10px 11px!important;margin-top:7px!important}.devPartV14 h3{font-size:14px!important}.devPartValue{font-size:19px!important}
+.devPartMeta{margin-top:6px!important}.devPartAction{margin-top:7px!important}
+.playerCarCard{padding:13px!important}.car6{padding:8px!important}.car6 b{font-size:18px!important}
+.modalhead{padding:13px 16px!important}.driverdetail{padding:14px!important}.driverdetailname{font-size:25px!important}
+.devProjectOption{padding:10px 11px!important;margin-top:7px!important}
+.fullSeasonSimBtn{font-weight:850!important;border-color:#252b34!important;background:#252b34!important;color:#fff!important;white-space:nowrap!important}
+.fullSeasonSimBtn:hover{background:#11151b!important;border-color:#11151b!important}
+.fullSeasonSimBtn:disabled{opacity:.5!important}
+
+@media(max-width:760px){
+  .top{height:46px!important;padding:0 10px!important}.logo{font-size:18px!important}
+  .wrap,.raceStageWrap{padding:10px 9px 22px!important}
+  .careerHeader,.modulehead{margin-bottom:10px!important}.careerHeader h1,.modulehead h1{font-size:21px!important}
+  .careerTools{gap:5px!important}.careerTools .mini{font-size:10.5px!important;min-height:29px!important;padding:5px 6px!important}
+  .hubtop{gap:7px!important;margin-bottom:8px!important}.card{padding:11px!important;border-radius:9px!important}
+  .small{font-size:11px!important}.kicker{font-size:10.5px!important;letter-spacing:1.7px!important}
+  #career .compactModules{gap:7px!important}.compactModules .module{min-height:122px!important;padding:10px 10px 35px!important}.compactModules .module h2{font-size:17px!important;margin:6px 0 4px!important}.compactModules .module p{font-size:10.5px!important;line-height:1.4!important}.compactModules .statusline{bottom:9px!important}
+  .devOverviewGrid{gap:7px!important;margin-bottom:8px!important}.devOverviewCard{padding:9px 10px!important}.devOverviewCard>b{font-size:18px!important}
+  .playerCarCard{padding:10px!important;margin-bottom:7px!important}.sectiontitle{font-size:16px!important}
+  .car6grid{gap:6px!important}.car6{padding:7px!important}.car6 b{font-size:18px!important}.attrRankSub{font-size:10.5px!important}
+  #development .devSeasonControl{padding:10px!important;margin-bottom:8px!important}.devModeButtons .mini{min-height:30px!important}
+  .devPartV14{padding:9px!important;border-radius:9px!important}.devPartV14 h3{font-size:15px!important}.devPartValue{font-size:18px!important}.devPartMeta span{font-size:10.5px!important;padding:3px 5px!important}.devPartAction .mini{min-height:35px!important}
+  .modalhead h2{font-size:18px!important}.driverdetail{padding:11px!important}.driverdetailname{font-size:21px!important}.devProjectOption h3{font-size:13px!important}.devOptionMeta span{font-size:10.5px!important}
+  .btn{min-height:36px!important}.mini{min-height:30px!important}
+}
+
+
+
+
+.customFormV19{padding:14px}.customFormV19 .customIntro{margin-bottom:12px;padding:11px 12px;border:1px solid #dfe4ea;border-radius:10px;background:#f7f9fb;color:#66717e;font-size:11px;line-height:1.6}
+.customFieldGridV19{display:grid;grid-template-columns:1fr 1fr;gap:9px}.customFieldV19{display:block}.customFieldV19.full{grid-column:1/-1}.customFieldV19 span{display:block;font-size:10.5px;color:#78828f;margin-bottom:5px;letter-spacing:.4px}.customFieldV19 input{width:100%;height:40px;border:1px solid #cfd6df;border-radius:8px;background:#fff;color:#1f242b;padding:0 11px;font:inherit;outline:none}.customFieldV19 input:focus{border-color:#e10600;box-shadow:0 0 0 2px rgba(225,6,0,.06)}
+.customStatsV19{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:11px}.customStatV19{padding:9px;background:#f6f8fa;border:1px solid #dfe4ea;border-radius:8px}.customStatV19 span{display:block;font-size:10.5px;color:#7c8692;margin-bottom:5px}.customStatV19 input{width:100%;border:0;background:transparent;font-size:17px;font-weight:900;color:#1b2027;outline:none;padding:0}
+.customTeamRuleV19{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:11px 0}.customTeamRuleV19 div{padding:9px;background:#fff;border:1px solid #dce2e8;border-radius:8px}.customTeamRuleV19 span{display:block;font-size:10.5px;color:#7c8692}.customTeamRuleV19 b{display:block;font-size:15px;margin-top:3px}.customErrorV19{min-height:18px;color:#b3130e;font-size:11px;margin-top:8px}.customActionsV19{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+.customModeBadgeV19{display:inline-flex;align-items:center;padding:3px 7px;border-radius:99px;background:#171b22;color:#fff;font-size:10.5px;font-weight:900;letter-spacing:1px;margin-left:7px;vertical-align:middle}
+/* Mobile-first resizing: denser cards, but text remains readable. */
+@media(max-width:760px){
+  body{font-size:15px!important}.top{height:46px!important;padding:0 11px!important}.logo{font-size:17px!important}.topright{display:none!important}
+  .wrap,.raceStageWrap{padding:10px 9px 24px!important}.hero{padding:15px 0 4px!important}.hero h1{font-size:35px!important;line-height:.92!important;margin:8px 0 12px!important}.hero p{font-size:12px!important;line-height:1.55!important}
+  .menuitem{padding:12px 13px!important;margin:6px 0!important;border-radius:9px!important}.menuitem b{font-size:15px!important}.menuitem span{font-size:11px!important}
+  .careerHeader{margin-bottom:8px!important}.careerHeader h1,.modulehead h1{font-size:21px!important;margin-top:2px!important}.modulehead{margin-bottom:9px!important}.kicker{font-size:10.5px!important;letter-spacing:1.7px!important}.small{font-size:11px!important;line-height:1.45!important}
+  .careerTools{gap:4px!important}.careerTools .mini{font-size:10.5px!important;min-height:30px!important;padding:5px 7px!important}
+  .hubtop{display:grid!important;grid-template-columns:1fr 1fr!important;gap:7px!important;margin-bottom:7px!important}.hubtop>.driverhubclick{grid-column:1/-1!important}.hubtop .card{padding:10px!important}.drivercard h2{font-size:18px!important}.big{font-size:21px!important}
+  #career .compactModules{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}.compactModules .module{min-height:116px!important;padding:9px 9px 31px!important;border-radius:10px!important}.compactModules .module h2{font-size:17px!important;margin:5px 0 3px!important}.compactModules .module p{font-size:10.5px!important;line-height:1.35!important}.compactModules .statusline{left:9px!important;right:9px!important;bottom:7px!important;font-size:10.5px!important;padding-top:6px!important}.compactModules .moduleSubAction{bottom:30px!important;left:9px!important;right:9px!important}.compactModules .moduleSubAction .mini{min-height:27px!important;padding:4px!important;font-size:10.5px!important}
+  .paddockTicker{border-radius:10px!important;padding:8px 0 7px!important}.paddockTickerTrack{font-size:10.5px!important;gap:35px!important}
+  .card,.profilebox,.relationGauge,.weekEvent{padding:10px!important;border-radius:10px!important}.profilebox{padding:13px 12px!important}.drivername{font-size:24px!important}.profileDriverOnly{margin-top:12px!important;padding-top:12px!important}.attr{grid-template-columns:52px 1fr 30px!important;font-size:12px!important;margin:7px 0!important}
+  #development .devOverviewGrid{grid-template-columns:1fr 1fr!important;gap:6px!important}.devOverviewCard{padding:8px!important}.devOverviewCard>b{font-size:17px!important}.playerCarCard{padding:9px!important}.car6grid{grid-template-columns:repeat(2,1fr)!important;gap:5px!important}.car6{padding:7px!important}.car6 b{font-size:17px!important}.attrRankSub{font-size:10.5px!important}
+  .devSeasonControl{padding:9px!important}.devModeButtons{gap:4px!important}.devModeButtons .mini{min-height:29px!important;font-size:10.5px!important}.modulegrid.devWorkbench{gap:7px!important}.devPartV14{padding:8px!important;margin:6px 0!important}.devPartV14 h3{font-size:14px!important}.devPartValue{font-size:17px!important}.devPartAction .mini{min-height:32px!important;font-size:11px!important}.projectV14{padding:8px!important}
+  .affairSummaryGrid,.affairBottomGrid{gap:7px!important}.affairGauge{padding:10px!important}.affairGauge .status{font-size:20px!important}.affairsPanel{padding:10px!important}.teamEventV16{padding:10px!important}.teamEventV16 h2{font-size:18px!important}.teamEventChoicesV16{gap:6px!important}.teamEventChoiceV16{padding:9px!important}.teamEventChoiceV16 b{font-size:12px!important}.teamEventChoiceV16 p{font-size:10.5px!important}.teamModPillV16{font-size:10.5px!important;padding:3px 5px!important}
+  .raceStageHero{padding:13px 12px!important}.raceStageHero h1{font-size:24px!important}.stageBody{gap:7px!important}.stageBrief,.gridPreview,.resultSummary,.finishCard{padding:11px!important}.strategychoice{padding:10px!important;min-height:auto!important}.strategychoice b{font-size:12px!important}.strategychoice small{font-size:10.5px!important}.finishPos{font-size:46px!important}.resultrow{padding:6px 4px!important;font-size:10.5px!important}
+  .contractV17Head{padding:10px!important;margin-bottom:7px!important}.contractV17Head h2{font-size:17px!important}.contractOfferGridV17{gap:7px!important}.contractOfferV17{min-height:0!important;padding:10px!important}.contractOfferV17 h3{font-size:15px!important}.contractOfferV17 p{font-size:10.5px!important;min-height:0!important}.contractChanceV17{padding:6px!important;margin:7px 0!important}
+  .modal{max-height:91dvh!important}.modalhead{padding:11px 13px!important}.modalhead h2{font-size:17px!important}.driverdetail{padding:10px!important}.driverdetailname{font-size:20px!important}.eventcard{padding:10px!important}.eventcard h3{font-size:18px!important}.eventscene{font-size:11px!important;padding:9px 10px!important}.eventchoice{padding:9px!important}.eventchoice b{font-size:12px!important}.eventchoice small{font-size:10.5px!important}
+  .customFormV19{padding:11px}.customStatsV19{grid-template-columns:repeat(3,1fr)}.customStatV19:nth-child(4),.customStatV19:nth-child(5){grid-column:auto}.customTeamRuleV19{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:430px){
+  .wrap,.raceStageWrap{padding-left:8px!important;padding-right:8px!important}.hero h1{font-size:32px!important}.careerHeader h1,.modulehead h1{font-size:20px!important}
+  #career .compactModules{grid-template-columns:repeat(2,minmax(0,1fr))!important}.compactModules .module{min-height:111px!important}.driverstats{grid-template-columns:repeat(3,1fr)!important}.driverstats .driverstat:first-child{grid-column:auto!important}.driverstat{padding:6px!important}.driverstat b{font-size:14px!important}
+  .resultMeta{grid-template-columns:repeat(3,1fr)!important}.calendargrid,.racecalendar .calendargrid{grid-template-columns:1fr!important}
+  .customFieldGridV19{grid-template-columns:1fr}.customFieldV19.full{grid-column:auto}.customStatsV19{grid-template-columns:repeat(3,1fr)}.customTeamRuleV19{grid-template-columns:1fr 1fr 1fr;gap:5px}.customTeamRuleV19 div{padding:7px 5px}.customActionsV19{display:grid;grid-template-columns:1fr 1fr}.customActionsV19 .btn{width:100%}
+}
+
+
+
+
+@media(max-width:760px){
+  #career .careerHeader>div:last-child{width:100%!important;min-width:0!important}
+  #career .careerTools{
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(5,minmax(0,1fr))!important;
+    gap:3px!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+  }
+  #career .careerTools .mini{
+    width:100%!important;
+    min-width:0!important;
+    max-width:none!important;
+    min-height:28px!important;
+    padding:4px 2px!important;
+    font-size:10.5px!important;
+    line-height:1.1!important;
+    letter-spacing:-.15px!important;
+    white-space:nowrap!important;
+    overflow:hidden!important;
+    text-overflow:clip!important;
+  }
+  #career .careerTools .fullSeasonSimBtn{
+    font-size:10.5px!important;
+    padding-left:1px!important;
+    padding-right:1px!important;
+  }
+}
+@media(max-width:390px){
+  #career .careerTools{gap:2px!important}
+  #career .careerTools .mini{font-size:10.5px!important;padding:4px 1px!important}
+  #career .careerTools .fullSeasonSimBtn{font-size:10.5px!important;letter-spacing:-.3px!important}
+}
+
+
+
+
+#home .homegrid{grid-template-columns:1fr!important;min-height:auto!important}
+#home .hero{max-width:100%!important;padding:10px 0 6px!important}
+#home .hero p{display:none!important}
+#home .menuitem{width:100%!important;max-width:100%!important;min-height:88px!important;padding:16px 18px!important;margin:10px 0!important;border-radius:16px!important;display:flex!important;flex-direction:column!important;justify-content:center!important}
+#home .menuitem b{font-size:18px!important;line-height:1.15!important}
+#home .menuitem span{font-size:13px!important;line-height:1.45!important;margin-top:8px!important}
+#home #resumeCareer span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+@media(max-width:560px){
+  #home .wrap{padding:14px!important}
+  #home .hero{padding:6px 0 4px!important}
+  #home .menuitem{min-height:78px!important;padding:14px 16px!important;margin:8px 0!important;border-radius:14px!important}
+  #home .menuitem b{font-size:18px!important}
+  #home .menuitem span{font-size:12px!important;margin-top:6px!important}
+}
+@media(max-width:390px){
+  #home .menuitem{min-height:74px!important;padding:13px 14px!important}
+  #home .menuitem b{font-size:17px!important}
+  #home .menuitem span{font-size:11.5px!important}
+}
+
+
+
+
+#weekendresult .resultSummary{padding:16px!important}
+#weekendresult #resultNarrative{font-size:13px!important;line-height:1.9!important;margin:10px 0 0!important;color:#596473!important;white-space:normal}
+@media(max-width:560px){
+  #weekendresult .resultSummary{padding:13px!important}
+  #weekendresult #resultNarrative{font-size:12.5px!important;line-height:1.85!important}
+}
+
+
+
+
+.historyRace.v25click{cursor:pointer;position:relative;padding-right:34px;transition:.14s ease}
+.historyRace.v25click:after{content:'›';position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:24px;line-height:1;color:#a2a9b4;font-weight:400}
+.historyRace.v25click:hover{background:#fff;border-color:#c9d0d9;transform:translateY(-1px);box-shadow:0 7px 18px rgba(32,42,56,.06)}
+.historyRace.v25click:hover:after{color:#e10600}
+.pastRaceTop{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.pastRaceStat{background:#f6f8fa;border:1px solid #e0e5eb;border-radius:9px;padding:10px}
+.pastRaceStat span{display:block;font-size:10.5px;color:#77818e;letter-spacing:.4px}.pastRaceStat b{display:block;margin-top:4px;font-size:18px;color:#171a21}
+.pastRaceReport{background:#f7f9fb;border-left:3px solid #e10600;padding:12px 13px;border-radius:0 8px 8px 0;margin:12px 0;font-size:12px;line-height:1.8;color:#4f5967}
+.pastRaceTable{border:1px solid #dfe4ea;border-radius:9px;overflow:hidden;margin-top:10px}
+.pastRaceRow{display:grid;grid-template-columns:42px minmax(0,1fr) minmax(82px,120px) 46px;gap:7px;align-items:center;padding:9px 10px;border-bottom:1px solid #e7eaee;font-size:12px;background:#fff}
+.pastRaceRow:last-child{border-bottom:0}.pastRaceRow.mine{background:#fff1f0;box-shadow:inset 3px 0 #e10600}.pastRaceRow .p{font-weight:900}.pastRaceRow .team{color:#788290;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pastRaceRow .pts{text-align:right;font-weight:800}.pastRaceRow .dnf{color:#b41611;font-weight:900}
+@media(max-width:560px){.pastRaceTop{grid-template-columns:1fr 1fr}.pastRaceRow{grid-template-columns:34px minmax(0,1fr) 76px 38px;padding:8px 7px;font-size:11px}.pastRaceReport{font-size:11.5px}.historyRace.v25click{padding-right:30px}}
+
+
+
+.fullSeasonProgressV27{
+  position:fixed;inset:0;z-index:120;display:none;
+  align-items:center;justify-content:center;
+  background:rgba(238,242,246,.82);backdrop-filter:blur(5px);
+}
+.fullSeasonProgressV27.show{display:flex}
+.fullSeasonProgressBoxV27{
+  width:min(390px,88vw);background:#fff;border:1px solid #d9dfe7;
+  border-radius:15px;padding:19px 18px;box-shadow:0 20px 55px rgba(30,40,55,.16)
+}
+.fullSeasonProgressBoxV27 .kicker{margin-bottom:7px}
+.fullSeasonProgressBoxV27 h2{font-size:20px;margin:0 0 5px}
+.fullSeasonProgressBoxV27 p{font-size:12px;color:#697482;line-height:1.55;margin:0}
+.fullSeasonBarV27{height:7px;background:#e8ecf1;border-radius:99px;overflow:hidden;margin-top:14px}
+.fullSeasonBarV27 i{display:block;height:100%;width:0;background:#e10600;transition:width .12s linear}
+.fullSeasonMetaV27{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:#727d8b}
+
+
+
+.logo::after{content:'BETA';display:inline-block;margin-left:8px;padding:2px 6px;border-radius:999px;background:#171b22;color:#fff;font-size:10.5px;letter-spacing:1px;vertical-align:middle;font-style:normal}.drivergrid.v2DriverGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.v2DriverChoice{position:relative;min-height:116px!important;padding:0!important;overflow:hidden;display:grid!important;grid-template-columns:92px 1fr;align-items:stretch;background:linear-gradient(135deg,#fff,#f4f6f8)!important}.v2DriverChoice .v2PortraitWrap{position:relative;overflow:hidden;background:linear-gradient(180deg,#edf1f5,#dce2e8);min-height:116px}.v2DriverChoice .v2Portrait{width:100%;height:100%;object-fit:contain;object-position:center bottom;display:block;transform:scale(1.08);transform-origin:center bottom}.v2DriverChoice .v2DriverCopy{padding:14px 12px 12px;display:flex;flex-direction:column;justify-content:center;min-width:0}.v2DriverChoice .v2DriverCopy b{font-size:15px;line-height:1.25}.v2DriverChoice .v2DriverCopy small{font-size:10.5px;line-height:1.45;margin-top:5px}.v2DriverChoice .ovr{position:absolute!important;right:10px!important;top:9px!important;z-index:2;background:#171b22!important;color:#fff!important;border-radius:7px;padding:4px 6px;font-size:12px!important}.v2PortraitFallback{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:900;color:#8a94a2;background:linear-gradient(145deg,#eef1f5,#d8dee6)}.profilebox.v2ProfileBox{position:relative;overflow:hidden;padding-right:250px!important;min-height:345px}.profilePortraitV2{position:absolute;right:12px;bottom:0;width:220px;height:330px;display:flex;align-items:flex-end;justify-content:center;pointer-events:none}.profilePortraitV2 img{width:100%;height:100%;object-fit:contain;object-position:center bottom;filter:drop-shadow(0 12px 18px rgba(25,35,45,.14))}.profilePortraitV2 .v2PortraitFallback{border-radius:14px;height:260px}.driverdetail.v2DetailPortrait{position:relative;padding-right:170px;min-height:290px}.driverDetailPortraitV2{position:absolute;right:0;top:0;width:150px;height:245px;overflow:hidden;border-radius:12px;background:linear-gradient(160deg,#f4f6f8,#e1e6eb)}.driverDetailPortraitV2 img{width:100%;height:100%;object-fit:contain;object-position:center bottom}.driverDetailPortraitV2 .v2PortraitFallback{font-size:30px}#career .driverhubclick{position:relative;overflow:hidden;padding-right:90px!important}.hubPortraitV2{position:absolute;right:4px;bottom:-8px;width:82px;height:112px;pointer-events:none}.hubPortraitV2 img{width:100%;height:100%;object-fit:contain;object-position:center bottom}.hubPortraitV2 .v2PortraitFallback{font-size:18px;background:transparent}.customFormV2{max-width:900px}.customSectionV2{margin:11px 0;padding:12px;border:1px solid #dce2e8;border-radius:11px;background:#f8fafb}.customSectionTitleV2{font-size:13px;font-weight:900;letter-spacing:.7px;margin-bottom:9px}.customSectionTitleV2 small{font-weight:500;color:#7b8592;letter-spacing:0}.customBudgetRowV2{display:grid;grid-template-columns:180px 1fr;gap:10px;align-items:end}.customBudgetHintV2{font-size:10.5px;color:#6f7985;line-height:1.55;padding:7px 0}.customCarStatsV2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:9px}.customCarPreviewV2{margin-top:9px;padding:9px 11px;border-radius:8px;background:#fff;border:1px solid #dce2e8;display:grid;grid-template-columns:1fr auto;align-items:center}.customCarPreviewV2 span{font-size:10.5px;color:#747f8c}.customCarPreviewV2 b{font-size:20px}.customCarPreviewV2 small{grid-column:1/-1;font-size:10.5px;color:#8a929d;margin-top:3px}@media(max-width:760px){.drivergrid.v2DriverGrid{grid-template-columns:1fr}.v2DriverChoice{grid-template-columns:82px 1fr;min-height:102px!important}.v2DriverChoice .v2PortraitWrap{min-height:102px}.profilebox.v2ProfileBox{padding-right:126px!important;min-height:310px}.profilePortraitV2{width:126px;height:235px;right:2px}.driverdetail.v2DetailPortrait{padding-right:0;padding-top:142px}.driverDetailPortraitV2{width:106px;height:145px;right:0;top:0}.customBudgetRowV2{grid-template-columns:1fr}.customCarStatsV2{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:390px){.profilebox.v2ProfileBox{padding-right:102px!important}.profilePortraitV2{width:105px;height:205px}.customCarStatsV2{gap:5px}}
+
+
+
+
+.v2DriverChoice .v2Portrait{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center 18%!important;transform:scale(1.42)!important;transform-origin:center 18%!important;
+}
+.profilePortraitV2{overflow:hidden!important;border-radius:14px 14px 0 0!important;}
+.profilePortraitV2 img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center 14%!important;transform:scale(1.32)!important;transform-origin:center 14%!important;
+  filter:drop-shadow(0 12px 18px rgba(25,35,45,.14));
+}
+.driverDetailPortraitV2 img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center 13%!important;transform:scale(1.30)!important;transform-origin:center 13%!important;
+}
+.hubPortraitV2{overflow:hidden!important;}
+.hubPortraitV2 img{
+  width:100%!important;height:100%!important;object-fit:cover!important;
+  object-position:center 12%!important;transform:scale(1.42)!important;transform-origin:center 12%!important;
+}
+@media(max-width:760px){
+  .v2DriverChoice .v2Portrait{object-position:center 16%!important;transform:scale(1.48)!important}
+  .profilePortraitV2 img{object-position:center 13%!important;transform:scale(1.38)!important}
+  .driverDetailPortraitV2 img{object-position:center 12%!important;transform:scale(1.38)!important}
+  .hubPortraitV2 img{object-position:center 11%!important;transform:scale(1.48)!important}
+}
+
+
+
+
+.v2DriverChoice{grid-template-columns:88px 1fr!important;min-height:104px!important}
+.v2DriverChoice .v2PortraitWrap{
+  min-height:auto!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  background:transparent!important;padding:12px 8px!important;
+}
+.v2DriverChoice .v2Portrait,
+.v2DriverChoice .v2PortraitFallback{
+  width:66px!important;height:66px!important;border-radius:50%!important;overflow:hidden!important;
+  border:2px solid #dde4eb!important;box-shadow:0 6px 14px rgba(35,45,55,.10)!important;
+}
+.v2DriverChoice .v2Portrait{
+  object-fit:cover!important;object-position:center 5%!important;transform:scale(1.9)!important;transform-origin:center 8%!important;
+  background:linear-gradient(180deg,#eef2f5,#dfe5eb)!important;
+}
+.v2DriverChoice .v2PortraitFallback{display:flex!important;align-items:center!important;justify-content:center!important;font-size:24px!important;background:linear-gradient(145deg,#eef1f5,#d8dee6)!important}
+
+.profilebox.v2ProfileBox{padding-right:0!important;min-height:auto!important;padding-top:8px!important}
+.profilePortraitV2{
+  position:static!important;margin:0 auto 14px!important;width:112px!important;height:112px!important;
+  border-radius:50%!important;overflow:hidden!important;pointer-events:none;
+  background:linear-gradient(160deg,#f4f6f8,#e1e6eb)!important;border:2px solid #dde4eb!important;
+  box-shadow:0 8px 20px rgba(35,45,55,.10)!important;
+}
+.profilePortraitV2 img,
+.profilePortraitV2 .v2PortraitFallback{
+  width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important;
+}
+.profilePortraitV2 img{
+  object-fit:cover!important;object-position:center 5%!important;transform:scale(1.95)!important;transform-origin:center 8%!important;
+  filter:none!important;
+}
+.profilePortraitV2 .v2PortraitFallback{display:flex!important;align-items:center!important;justify-content:center!important;font-size:34px!important}
+
+.driverdetail.v2DetailPortrait{padding-right:0!important;padding-top:0!important;min-height:auto!important}
+.driverDetailPortraitV2{
+  position:static!important;margin:0 auto 12px!important;width:96px!important;height:96px!important;border-radius:50%!important;
+  overflow:hidden!important;background:linear-gradient(160deg,#f4f6f8,#e1e6eb)!important;border:2px solid #dde4eb!important;
+  box-shadow:0 8px 18px rgba(35,45,55,.10)!important;
+}
+.driverDetailPortraitV2 img,
+.driverDetailPortraitV2 .v2PortraitFallback{width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important}
+.driverDetailPortraitV2 img{object-fit:cover!important;object-position:center 5%!important;transform:scale(1.92)!important;transform-origin:center 8%!important}
+.driverDetailPortraitV2 .v2PortraitFallback{display:flex!important;align-items:center!important;justify-content:center!important;font-size:28px!important}
+
+#career .driverhubclick{padding-right:0!important;padding-top:8px!important}
+.hubPortraitV2{
+  position:static!important;margin:0 auto 10px!important;width:76px!important;height:76px!important;border-radius:50%!important;
+  overflow:hidden!important;pointer-events:none;background:linear-gradient(160deg,#f4f6f8,#e1e6eb)!important;
+  border:2px solid #dde4eb!important;box-shadow:0 6px 14px rgba(35,45,55,.10)!important;
+}
+.hubPortraitV2 img,
+.hubPortraitV2 .v2PortraitFallback{width:100%!important;height:100%!important;border-radius:50%!important;overflow:hidden!important}
+.hubPortraitV2 img{object-fit:cover!important;object-position:center 5%!important;transform:scale(1.95)!important;transform-origin:center 8%!important}
+.hubPortraitV2 .v2PortraitFallback{display:flex!important;align-items:center!important;justify-content:center!important;font-size:22px!important;background:linear-gradient(145deg,#eef1f5,#d8dee6)!important}
+
+@media(max-width:760px){
+  .v2DriverChoice{grid-template-columns:78px 1fr!important;min-height:96px!important}
+  .v2DriverChoice .v2PortraitWrap{padding:10px 6px!important}
+  .v2DriverChoice .v2Portrait,.v2DriverChoice .v2PortraitFallback{width:58px!important;height:58px!important}
+  .profilePortraitV2{width:98px!important;height:98px!important;margin-bottom:12px!important}
+  .driverDetailPortraitV2{width:84px!important;height:84px!important}
+  .hubPortraitV2{width:68px!important;height:68px!important}
+}
+
+
+
+.contractTermV23{display:inline-flex;align-items:center;gap:5px;margin-top:7px;padding:4px 7px;border-radius:999px;background:#171b22;color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.35px}
+.contractRuleV23{margin:9px 0 12px;padding:10px 12px;border-radius:9px;border:1px solid #dfe4ea;background:#f7f9fb;font-size:11px;line-height:1.65;color:#5f6976}
+.contractRuleV23 b{color:#20252d}.contractOfferV17 .contractLengthV23{font-size:10.5px;color:#e10600;font-weight:900;margin-top:6px}
+.eventcard .trLineV23{margin:8px 0;padding:8px 10px;border-left:3px solid #171b22;background:#f4f6f8;border-radius:0 7px 7px 0;font-size:11px;line-height:1.55;color:#4e5865}
+
+
+
+
+.profilebox.v2ProfileBox,
+.driverdetail.v2DetailPortrait,
+#career .driverhubclick,
+#weekendresult .finishCard,
+#weekendresult .resultSummary{position:relative!important;overflow:hidden!important}
+
+/* Move profile/career portraits into the empty right-side slot */
+.profilebox.v2ProfileBox{padding-right:132px!important;min-height:258px!important}
+.profilePortraitV2{
+  position:absolute!important;right:18px!important;top:84px!important;margin:0!important;
+  width:96px!important;height:96px!important;z-index:2;
+}
+.driverdetail.v2DetailPortrait{padding-right:124px!important;min-height:220px!important}
+.driverDetailPortraitV2{
+  position:absolute!important;right:18px!important;top:18px!important;margin:0!important;
+  width:86px!important;height:86px!important;z-index:2;
+}
+#career .driverhubclick{padding-right:118px!important;padding-top:8px!important;min-height:214px!important}
+.hubPortraitV2{
+  position:absolute!important;right:20px!important;top:56%!important;transform:translateY(-50%)!important;
+  margin:0!important;width:84px!important;height:84px!important;z-index:2;
+}
+
+/* Add circular portrait to race result cards */
+#weekendresult .finishCard{padding-right:136px!important;min-height:232px!important}
+#weekendresult .resultSummary{padding-right:94px!important}
+.resultPortraitV24,
+.resultReportPortraitV24{
+  position:absolute;right:18px;border-radius:50%;overflow:hidden;pointer-events:none;
+  background:linear-gradient(160deg,#f4f6f8,#e1e6eb);border:2px solid #dde4eb;
+  box-shadow:0 8px 18px rgba(35,45,55,.10);
+}
+.resultPortraitV24{top:20px;width:86px;height:86px}
+.resultReportPortraitV24{top:16px;width:62px;height:62px}
+.resultPortraitV24 img,.resultPortraitV24 .v2PortraitFallback,
+.resultReportPortraitV24 img,.resultReportPortraitV24 .v2PortraitFallback{
+  width:100%;height:100%;border-radius:50%;overflow:hidden
+}
+.resultPortraitV24 img,
+.resultReportPortraitV24 img,
+.profilePortraitV2 img,
+.driverDetailPortraitV2 img,
+.hubPortraitV2 img{
+  object-fit:cover!important;object-position:center 4%!important;transform:scale(1.95)!important;transform-origin:center 8%!important;
+}
+.resultPortraitV24 .v2PortraitFallback,
+.resultReportPortraitV24 .v2PortraitFallback{display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#eef1f5,#d8dee6)}
+.resultPortraitV24 .v2PortraitFallback{font-size:30px}
+.resultReportPortraitV24 .v2PortraitFallback{font-size:22px}
+#weekendresult .resultSummary .kicker{padding-right:74px!important}
+
+@media(max-width:760px){
+  .profilebox.v2ProfileBox{padding-right:118px!important;min-height:242px!important}
+  .profilePortraitV2{right:12px!important;top:76px!important;width:84px!important;height:84px!important}
+  .driverdetail.v2DetailPortrait{padding-right:108px!important;min-height:202px!important}
+  .driverDetailPortraitV2{right:12px!important;top:12px!important;width:76px!important;height:76px!important}
+  #career .driverhubclick{padding-right:104px!important;min-height:198px!important}
+  .hubPortraitV2{right:14px!important;width:74px!important;height:74px!important}
+  #weekendresult .finishCard{padding-right:112px!important;min-height:214px!important}
+  .resultPortraitV24{right:12px!important;top:16px!important;width:74px!important;height:74px!important}
+  #weekendresult .resultSummary{padding-right:78px!important}
+  .resultReportPortraitV24{right:12px!important;top:12px!important;width:54px!important;height:54px!important}
+}
+
+
+
+
+.portraitSafeV28{position:relative;width:100%;height:100%;overflow:hidden;border-radius:inherit}
+.portraitSafeV28>.v2PortraitFallback{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:flex!important;align-items:center!important;justify-content:center!important;z-index:0}
+.portraitSafeV28>img{position:absolute!important;inset:0!important;z-index:1}
+.portraitSafeV28.loaded>.v2PortraitFallback{visibility:hidden}
+
+
+
+.dnsNoticeV29{border:1px solid #e2b7b3;background:linear-gradient(145deg,#fff8f7,#fff);border-radius:12px;padding:15px;margin-top:10px}
+.dnsNoticeV29 .dnsCode{font-size:44px;font-weight:950;line-height:1;color:#b41611;letter-spacing:-2px;margin:3px 0 8px}
+.dnsNoticeV29 p{font-size:12px;color:#68727e;line-height:1.75;margin:0 0 12px}
+.dnsReliabilityV29{display:inline-flex;gap:6px;align-items:center;font-size:10.5px;color:#747e8b;background:#f2f4f7;border:1px solid #e0e4e9;border-radius:999px;padding:4px 7px;margin-bottom:10px}
+
+
+
+.logo::after{content:'V3'!important}
+.achievementModuleV3{background:linear-gradient(145deg,#fff,#f7f3ea)!important}
+.achievementWrapV3{max-width:1080px}
+.achievementHeroV3{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center;padding:22px;margin-bottom:12px;background:linear-gradient(135deg,#171a21 0%,#252933 72%,#34301f 100%);color:#fff;border-radius:14px;box-shadow:0 14px 34px rgba(36,45,60,.12);position:relative;overflow:hidden}
+.achievementHeroV3:after{content:'🏆';position:absolute;right:125px;top:-24px;font-size:118px;opacity:.055;transform:rotate(-10deg)}
+.achievementHeroV3 h2{font-size:24px;margin:5px 0 6px}.achievementHeroV3 p{font-size:11px;line-height:1.7;color:#b4bac5;margin:0;max-width:620px}
+.achievementScoreV3{text-align:right;min-width:118px}.achievementScoreV3 strong{display:inline-block;font-size:48px;line-height:.95}.achievementScoreV3 span{font-size:16px;color:#aab0ba}.achievementScoreV3 small{display:block;margin-top:7px;font-size:10.5px;letter-spacing:1.5px;color:#d7ba68}
+.achievementTabsV3{display:flex;gap:6px;margin:12px 0}.achievementTabsV3 .mini.active{background:#171a21;color:#fff;border-color:#171a21}
+.achievementSectionV3{margin:13px 0}.achievementSectionHeadV3{display:flex;align-items:end;justify-content:space-between;margin-bottom:7px}.achievementSectionHeadV3 h3{margin:0;font-size:14px}.achievementSectionHeadV3 span{font-size:10.5px;color:#858d98}
+.achievementGridV3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.achievementCardV3{position:relative;min-height:116px;padding:12px;border:1px solid #dfe4ea;background:#fff;border-radius:11px;overflow:hidden;transition:.18s ease}
+.achievementCardV3.unlocked{border-color:#d9c484;background:linear-gradient(145deg,#fff,#fffaf0)}
+.achievementCardV3.locked{filter:saturate(.25)}
+.achievementIconV3{width:31px;height:31px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f0f2f5;border:1px solid #e0e4e9;font-size:17px;margin-bottom:8px}.unlocked .achievementIconV3{background:#201d15;color:#f4d477;border-color:#3a3320}
+.achievementCardV3 h4{font-size:13px;margin:0 0 5px}.achievementCardV3 p{font-size:10.5px;line-height:1.55;color:#747d89;margin:0 0 18px}.achievementMetaV3{position:absolute;left:12px;right:12px;bottom:9px;display:flex;justify-content:space-between;gap:7px;font-size:10.5px;color:#949ba5;text-transform:uppercase;letter-spacing:.55px}.achievementMetaV3 b{color:#7f6a31}.achievementLockedV3 h4{letter-spacing:2px}.achievementLockedV3 p{color:#9aa1aa}
+.achievementProgressV3{height:3px;background:#edf0f3;border-radius:99px;overflow:hidden;margin-top:7px}.achievementProgressV3>i{display:block;height:100%;background:#222831;border-radius:99px}
+/* Small achievement toast with queued slide animation. */
+#achievementToastV3{position:fixed;left:50%;top:18px;transform:translate(-50%,-135%);width:min(390px,calc(100vw - 28px));z-index:10050;pointer-events:none;opacity:0}
+#achievementToastV3.show{animation:achievementDropV3 3.2s cubic-bezier(.2,.8,.2,1) forwards}
+.achievementToastInnerV3{display:grid;grid-template-columns:46px 1fr auto;gap:11px;align-items:center;padding:11px 12px;background:rgba(20,22,28,.97);color:#fff;border:1px solid #4b4330;border-radius:13px;box-shadow:0 18px 48px rgba(0,0,0,.32);backdrop-filter:blur(10px)}
+.achievementToastIconV3{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#d5ae43,#fff0a8);color:#1b1a15;font-size:21px;box-shadow:0 0 0 0 rgba(227,190,85,.45)}
+#achievementToastV3.show .achievementToastIconV3{animation:achievementPulseV3 .72s ease .28s}
+.achievementToastCopyV3 small{display:block;font-size:10.5px;letter-spacing:1.25px;color:#d9bf73;margin-bottom:3px}.achievementToastCopyV3 b{display:block;font-size:14px;line-height:1.25}.achievementToastCopyV3 span{display:block;font-size:10.5px;color:#aeb4bf;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.achievementToastRarityV3{font-size:10.5px;color:#d9bf73;border:1px solid #66583a;padding:3px 5px;border-radius:999px;white-space:nowrap}
+@keyframes achievementDropV3{0%{opacity:0;transform:translate(-50%,-135%)}10%{opacity:1;transform:translate(-50%,0)}18%{transform:translate(-50%,3px)}82%{opacity:1;transform:translate(-50%,3px)}100%{opacity:0;transform:translate(-50%,-120%)}}
+@keyframes achievementPulseV3{0%{box-shadow:0 0 0 0 rgba(227,190,85,.55);transform:scale(.92)}55%{box-shadow:0 0 0 11px rgba(227,190,85,0);transform:scale(1.06)}100%{transform:scale(1)}}
+.fastestLapBadgeV3{margin-top:8px;display:inline-flex;gap:5px;align-items:center;padding:4px 7px;border:1px solid #d7c27f;background:#fffaf0;border-radius:999px;font-size:10.5px;font-weight:800;color:#735d20}
+@media(max-width:760px){.achievementHeroV3{padding:17px;grid-template-columns:1fr auto}.achievementHeroV3 h2{font-size:19px}.achievementScoreV3{min-width:82px}.achievementScoreV3 strong{font-size:38px}.achievementGridV3{grid-template-columns:repeat(2,minmax(0,1fr))}.achievementCardV3{min-height:120px;padding:10px}.achievementMetaV3{left:10px;right:10px}.achievementHeroV3:after{right:70px;font-size:92px}}
+@media(max-width:390px){.achievementGridV3{grid-template-columns:1fr}.achievementHeroV3{grid-template-columns:1fr}.achievementScoreV3{text-align:left}.achievementScoreV3 strong{font-size:34px}}
+
+
+
+#career .compactModules .achievementModuleV3{order:6}
+#career .compactModules .achievementModuleV3 .statusline b{color:#171b22}
+#career .compactModules .achievementModuleV3{background:linear-gradient(145deg,#fff8ec,#f7f2e7)!important}
+
+
+
+.legendTopV33{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;padding:11px 12px;border:1px solid #dbe1e8;border-radius:11px;background:linear-gradient(135deg,#fff,#f5f7fa)}
+.legendTopV33 b{font-size:14px}.legendTopV33 span{display:block;margin-top:3px;font-size:10.5px;color:#7b8490;line-height:1.5}.legendTopActionsV33{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.legendToggleV33{border-color:#9e8b57!important;background:#fffaf0!important;color:#5e4f2f!important;font-weight:900!important}.legendToggleV33.on{background:#1a1d24!important;color:#f2d582!important;border-color:#1a1d24!important}
+.legendGridV33{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.legendCardV33{position:relative;display:grid;grid-template-columns:78px 1fr;min-height:110px;border:1px solid #d9dfe7;border-radius:11px;background:linear-gradient(140deg,#fff,#f5f7f9);overflow:hidden}.legendPortraitV33{display:flex;align-items:center;justify-content:center;padding:9px;background:radial-gradient(circle at 50% 42%,#fff 0,#eef1f4 58%,#e0e5ea 100%)}.legendPortraitCircleV33{width:62px;height:62px;border-radius:50%;overflow:hidden;border:2px solid #cbb573;box-shadow:0 5px 14px rgba(38,42,50,.11);background:#edf1f4}.legendPortraitCircleV33 .portraitSafeV28,.legendPortraitCircleV33 img,.legendPortraitCircleV33 .v2PortraitFallback{width:100%!important;height:100%!important;border-radius:50%!important}.legendPortraitCircleV33 img{object-fit:cover!important;object-position:center 24%!important;transform:scale(1.08)!important;transform-origin:center center!important}.legendCopyV33{padding:12px 10px 36px 7px;min-width:0}.legendCopyV33 h3{margin:0;font-size:14px;line-height:1.25}.legendMetaV33{font-size:10.5px;color:#7d8692;margin-top:4px}.legendStatsV33{font-size:10.5px;color:#3d4651;margin-top:7px;font-weight:800;word-spacing:4px}.legendSeatV33{font-size:10.5px;color:#8a7438;margin-top:5px}.legendBadgeV33{position:absolute;right:8px;top:8px;padding:3px 6px;border-radius:999px;background:#171a20;color:#efd67e;font-size:10.5px;font-weight:900;letter-spacing:.9px}.legendCardActionsV33{position:absolute;left:85px;right:8px;bottom:8px;display:flex;gap:5px}.legendCardActionsV33 .mini{padding:5px 7px!important;font-size:10.5px!important}.legendReplaceGridV33{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.legendSeatChoiceV33{border:1px solid #d9dfe6;border-radius:9px;padding:9px;background:#fff;cursor:pointer;position:relative}.legendSeatChoiceV33:hover{border-color:#aeb7c2}.legendSeatChoiceV33.used{opacity:.45;cursor:not-allowed}.legendSeatChoiceV33 b{display:block;font-size:12px}.legendSeatChoiceV33 span{display:block;font-size:10.5px;color:#7a8490;margin-top:3px}.legendSeatChoiceV33 i{position:absolute;right:7px;top:7px;font-size:10.5px;font-style:normal;color:#9b7b27}.legendCurrentMarkV33{display:inline-block;margin-left:5px;padding:2px 4px;border-radius:999px;background:#f4e9c8;color:#735d25;font-size:10.5px}.legendFooterV33{margin-top:11px;padding-top:9px;border-top:1px solid #e0e4e9;font-size:10.5px;color:#8b929b;line-height:1.55}.legendRosterMarkV33{display:inline-flex;align-items:center;margin-left:5px;padding:2px 5px;border-radius:999px;background:#171a20;color:#e7c965;font-size:10.5px;vertical-align:middle}.legendDriverChoiceV33{box-shadow:inset 3px 0 #c9aa55}.legendDriverChoiceV33 .v2PortraitWrap{background:radial-gradient(circle at 50% 45%,#fff,#edf1f4)!important}.legendDriverChoiceV33 img.legendPortraitImgV33{object-fit:cover!important;object-position:center 24%!important;transform:scale(1.06)!important;transform-origin:center!important}
+.profilePortraitV2 img.legendPortraitImgV33,.hubPortraitV2 img.legendPortraitImgV33,.driverDetailPortraitV2 img.legendPortraitImgV33,.resultPortraitV24 img.legendPortraitImgV33,.resultReportPortraitV24 img.legendPortraitImgV33{object-fit:cover!important;object-position:center 23%!important;transform:scale(1.08)!important;transform-origin:center center!important}
+@media(max-width:760px){.legendGridV33,.legendReplaceGridV33{grid-template-columns:1fr}.legendTopV33{align-items:flex-start}.legendTopActionsV33{max-width:145px}.legendCardV33{grid-template-columns:72px 1fr}.legendCardActionsV33{left:79px}.legendPortraitCircleV33{width:58px;height:58px}}
+
+
+
+
+#career .module.contractAlertV34{
+  border-color:#e10600!important;
+  box-shadow:inset 0 0 0 1px rgba(225,6,0,.18),0 10px 24px rgba(225,6,0,.09)!important;
+  background:linear-gradient(145deg,#fff,#fff3f2)!important;
+}
+#career .module.contractAlertV34:before{
+  content:"未签约";
+  position:absolute;
+  right:9px;
+  top:8px;
+  z-index:4;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#e10600;
+  color:#fff;
+  font-size:10.5px;
+  font-weight:950;
+  letter-spacing:.7px;
+  box-shadow:0 4px 12px rgba(225,6,0,.20);
+  animation:contractAlertPulseV34 1.8s ease-in-out infinite;
+}
+#career .module.contractAlertV34 .modnum,
+#career .module.contractAlertV34 .statusline b{color:#e10600!important}
+#career .module.contractAlertV34 h2{color:#b40500!important}
+@keyframes contractAlertPulseV34{
+  0%,100%{transform:scale(1);box-shadow:0 4px 12px rgba(225,6,0,.16)}
+  50%{transform:scale(1.04);box-shadow:0 4px 17px rgba(225,6,0,.30)}
+}
+@media(prefers-reduced-motion:reduce){
+  #career .module.contractAlertV34:before{animation:none}
+}
+
+
+
+.logo::after{content:'V3.7'!important}
+
+
+
+.logo::after{content:'BETA'!important}
+.contractHubV40{display:grid;grid-template-columns:1.05fr .95fr;gap:10px;margin-bottom:11px}
+.contractSummaryV40,.contractRuleBoxV40{background:#fff;border:1px solid #dde3ea;border-radius:12px;padding:14px}
+.contractSummaryV40 h2{margin:4px 0 5px;font-size:20px}.contractSummaryV40 p,.contractRuleBoxV40 p{margin:0;color:#697481;font-size:11px;line-height:1.65}
+.contractMetaV40{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.contractMetaV40>div{background:#f6f8fa;border:1px solid #e2e7ed;border-radius:8px;padding:8px}.contractMetaV40 span{display:block;color:#7b8591;font-size:10.5px}.contractMetaV40 b{display:block;margin-top:2px;font-size:14px;color:#20252d}
+.contractWindowV40{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:5px 8px;border-radius:999px;font-size:10.5px;font-weight:900;background:#eef1f5;color:#65707d}.contractWindowV40.open{background:#fff4df;color:#8a6115}.contractWindowV40.signed{background:#eaf7f0;color:#167649}.contractWindowV40.clause{background:#fff0ef;color:#b32620}
+.contractOfferGridV40{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.contractOfferV40{background:#fff;border:1px solid #dfe4ea;border-radius:12px;padding:13px;min-height:295px;position:relative}.contractOfferV40.renew{box-shadow:inset 3px 0 #159a5b}.contractOfferV40.big{box-shadow:inset 3px 0 #e10600}.contractOfferV40.small{box-shadow:inset 3px 0 #6f7b88}.contractOfferV40.empty{opacity:.62;box-shadow:inset 3px 0 #c6ccd3}.contractOfferV40 h3{font-size:17px;margin:4px 0 2px}.contractOfferV40 .offerSubV40{font-size:10.5px;color:#77818e;min-height:20px}.contractRoleV40{display:flex;justify-content:space-between;gap:7px;margin:9px 0;padding:7px 8px;border-radius:8px;background:#f7f9fb;border:1px solid #e4e8ed;font-size:10.5px;color:#697482}.contractRoleV40 b{color:#262c34}
+.contractEvalV40{display:grid;gap:5px;margin:8px 0}.contractEvalRowV40{display:grid;grid-template-columns:62px 1fr 42px;gap:6px;align-items:center}.contractEvalRowV40 span{font-size:10.5px;color:#68737f}.contractEvalBarV40{height:5px;background:#e9edf1;border-radius:8px;overflow:hidden}.contractEvalBarV40 i{display:block;height:100%;background:#697685;border-radius:8px}.contractEvalRowV40 b{font-size:10.5px;text-align:right;color:#2b3138}.contractOverallV40{display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px;padding-top:9px;border-top:1px solid #e5e9ee}.contractOverallV40 span{display:block;font-size:10.5px;color:#7a8490}.contractOverallV40 strong{font-size:20px}.contractOverallV40 em{font-style:normal;font-size:10.5px;font-weight:900;color:#68727f}.contractTermV40{font-size:10.5px;color:#6e7884;margin:5px 0 9px}.contractLogV40{margin-top:11px}.contractLogV40 .row{font-size:11px;color:#5f6976;padding:7px 0;border-bottom:1px dashed #e2e6eb}.contractClosedV40{padding:18px;border:1px dashed #d7dde4;border-radius:11px;background:#f7f9fb;color:#687481;font-size:12px;line-height:1.75;text-align:center}.contractClauseV40{margin-top:9px;padding:9px 10px;border-radius:8px;background:#fff2f1;border:1px solid #efc4c1;color:#8e2a26;font-size:10.5px;line-height:1.6}
+.strollDadV40{margin:8px 0 6px;font-size:16px;font-weight:950;letter-spacing:.4px;color:#159a5b}.strollYearsV40{display:grid;grid-template-columns:1fr 86px;gap:8px;align-items:center;margin:7px 0 9px;padding:8px 9px;border:1px dashed #b9c5bf;border-radius:8px;background:#f4faf6}.strollYearsV40 span{font-size:10.5px;color:#68737f}.strollYearsV40 input{width:100%;box-sizing:border-box;border:1px solid #cfd8d3;border-radius:7px;background:#fff;padding:7px 8px;font:800 14px inherit;color:#20252d;text-align:center;outline:none}.strollYearsV40 input:focus{border-color:#159a5b;box-shadow:0 0 0 2px rgba(21,154,91,.08)}
+#career .module.contractContactV40{border-color:#d9ad55!important;background:linear-gradient(145deg,#fff,#fff9ed)!important;box-shadow:inset 0 0 0 1px rgba(196,143,32,.10),0 10px 24px rgba(147,106,20,.07)!important}
+#career .module.contractContactV40:before{content:'可接触';position:absolute;right:9px;top:8px;padding:4px 7px;border-radius:999px;background:#b88724;color:#fff;font-size:10.5px;font-weight:950;letter-spacing:.7px}
+@media(max-width:820px){.contractHubV40,.contractOfferGridV40{grid-template-columns:1fr}.contractMetaV40{grid-template-columns:1fr 1fr 1fr}.contractOfferV40{min-height:0}}
+@media(max-width:480px){.contractMetaV40{grid-template-columns:1fr}.contractEvalRowV40{grid-template-columns:58px 1fr 39px}}
+
+
+
+/* V4.0 Patch 04: team affairs moves into race day; relationship module becomes a placeholder. */
+#career .compactModules{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+#career .compactModules>.module:nth-child(5){display:block!important}
+#career .compactModules>.module{min-height:168px}
+.seasonShortcutV17{display:none!important}
+#media .affairSummaryGrid,#media .affairsPanel,#media .affairBottomGrid{display:none!important}
+.teamRelationPlaceholderV40{min-height:220px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start}
+.teamRelationPlaceholderV40 h2{font-size:28px;margin:7px 0}.teamRelationPlaceholderV40 p{max-width:560px;color:#79828d;font-size:12px;line-height:1.8}
+.raceOpsHeroV40{margin-bottom:12px}.raceOpsLayoutV40{display:grid;grid-template-columns:1.35fr .65fr;gap:12px}.raceOpsEventV40{padding:18px}.raceOpsEventV40 h2{font-size:24px;margin:6px 0 8px}.raceOpsEventV40>p{font-size:12px;line-height:1.75;color:#68727e}.raceOpsChoiceGridV40{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}.raceOpsChoiceV40{border:1px solid #dfe4ea;background:#f8fafb;border-radius:10px;padding:12px;cursor:pointer;transition:.15s}.raceOpsChoiceV40:hover{transform:translateY(-1px);border-color:#bfc7d0}.raceOpsChoiceV40 b{display:block;font-size:14px;margin-bottom:5px}.raceOpsChoiceV40>span{display:block;font-size:11px;line-height:1.55;color:#697482;min-height:42px}.raceOpsChoiceV40 .v16Effects{margin-top:9px}.raceOpsRequiredV40{padding:9px 11px;margin-top:12px;background:#fff6e7;border:1px solid #ecd59d;border-radius:8px;font-size:11px;color:#76612f;line-height:1.6}.raceOpsEffectGridV40{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.raceOpsEffectGridV40>div{padding:9px;background:#f6f8fa;border:1px solid #e0e5ea;border-radius:8px}.raceOpsEffectGridV40 span{font-size:10.5px;color:#78828e}.raceOpsEffectGridV40 b{display:block;margin-top:3px;font-size:16px}.raceOpsEffectGridV40 b.up{color:#159a5b}.raceOpsEffectGridV40 b.down{color:#d53b35}.raceOpsEffectGridV40 b.flat{color:#69737f}
+/* New championship archive. */
+.standingsHeroV40{display:grid;grid-template-columns:1.2fr .8fr;gap:12px;margin-bottom:12px}.standingsSummaryV40{padding:18px}.standingsSummaryV40 h2{font-size:24px;margin:6px 0}.standingsLiveGridV40{display:grid;grid-template-columns:1fr 1fr;gap:12px}.standingsTimelineV40{display:flex;gap:6px;overflow:auto;padding:4px 1px 10px;scrollbar-width:thin}.standingsRoundBtnV40{white-space:nowrap;border:1px solid #dfe4ea;background:#fff;border-radius:8px;padding:8px 10px;font:800 11px inherit;color:#66717e;cursor:pointer}.standingsRoundBtnV40.active{background:#20252d;color:#fff;border-color:#20252d}.standingsArchiveV40{margin-top:12px}.standingsArchiveHeadV40{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:10px}.standingsArchiveHeadV40 h2{margin:3px 0;font-size:23px}.standingsTabsV40{display:flex;gap:6px;flex-wrap:wrap}.standingsTabsV40 .mini.active{background:#20252d;color:#fff}.standingsArchiveTableV40{width:100%;border-collapse:collapse;font-size:12px}.standingsArchiveTableV40 th{font-size:10.5px;color:#7d8691;font-weight:800;text-align:right;padding:8px;border-bottom:1px solid #dfe4ea}.standingsArchiveTableV40 td{text-align:right;padding:9px 8px;border-bottom:1px solid #edf0f3}.standingsArchiveTableV40 th:nth-child(2),.standingsArchiveTableV40 td:nth-child(2){text-align:left}.standingsArchiveTableV40 tr.mine{background:#fff1f0}.standingsResultTagV40{font-size:10.5px;padding:3px 6px;border-radius:999px;background:#edf1f4;color:#69737e}.standingsResultTagV40.dnf{background:#fdeceb;color:#b41611}.standingsDeltaV40{font-size:10.5px;margin-left:5px}.standingsDeltaV40.up{color:#159a5b}.standingsDeltaV40.down{color:#c23a35}.standingsNoDataV40{padding:24px;text-align:center;color:#7d8792;border:1px dashed #d7dde4;border-radius:10px;font-size:12px;line-height:1.8}
+@media(max-width:760px){.raceOpsLayoutV40,.standingsHeroV40,.standingsLiveGridV40{grid-template-columns:1fr}.raceOpsChoiceGridV40{grid-template-columns:1fr}.raceOpsChoiceV40>span{min-height:0}#career .compactModules>.module{min-height:150px}.standingsArchiveHeadV40{align-items:flex-start;flex-direction:column}.standingsArchiveV40{overflow:hidden}.standingsTableScrollV40{overflow:auto}.standingsArchiveTableV40{min-width:520px}}
+
+
+
+/* V4.0 Patch 05: mobile championship + standalone race-week launcher. */
+#career #raceModuleCard{display:none!important}
+.raceWeekendLaunchV405{position:relative;overflow:hidden;margin:10px 0 12px;border:1px solid #d8dee6;border-radius:16px;background:linear-gradient(120deg,#181d25 0%,#232a34 68%,#3a2020 100%);color:#fff;min-height:150px;padding:20px 22px;cursor:pointer;box-shadow:0 12px 28px rgba(28,35,46,.12)}
+.raceWeekendLaunchV405:before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:#e10600}.raceWeekendLaunchV405:after{content:'RACE';position:absolute;right:-12px;bottom:-28px;font-size:96px;line-height:1;font-weight:950;font-style:italic;letter-spacing:-6px;color:rgba(255,255,255,.035);pointer-events:none}
+.raceWeekendLaunchV405 .raceLaunchTopV405{display:flex;justify-content:space-between;align-items:center;gap:12px;position:relative;z-index:1}.raceWeekendLaunchV405 .raceLaunchKickerV405{font-size:10.5px;letter-spacing:2.2px;font-weight:900;color:#ff5c57}.raceWeekendLaunchV405 .raceLaunchStateV405{font-size:10.5px;font-weight:900;letter-spacing:1px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.08);padding:5px 9px;border-radius:999px}.raceWeekendLaunchV405 h2{position:relative;z-index:1;font-size:30px;line-height:1.02;margin:16px 0 7px;letter-spacing:-1px}.raceWeekendLaunchV405 .raceLaunchNameV405{position:relative;z-index:1;font-size:15px;font-weight:900}.raceWeekendLaunchV405 .raceLaunchMetaV405{position:relative;z-index:1;color:#b9c0c9;font-size:11px;margin-top:4px}.raceWeekendLaunchV405 .raceLaunchBottomV405{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:end;gap:10px;margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,.12)}.raceWeekendLaunchV405 .raceLaunchHintV405{font-size:11px;color:#c9ced5;line-height:1.55}.raceWeekendLaunchV405 .raceLaunchGoV405{font-size:12px;font-weight:950;white-space:nowrap;color:#fff}
+/* Keep standings on the left and achievements on the right after the large race-week entry moves out. */
+#career .compactModules>.module:nth-child(4){grid-column:1/-1}
+#career .compactModules>.module:nth-child(5){grid-column:1}
+#career .compactModules>.module:nth-child(6){grid-column:2}
+.raceOpsNextV405{display:flex;justify-content:flex-end;margin-top:14px;padding-top:14px;border-top:1px solid #e4e8ed}.raceOpsNextV405 .btn{min-width:150px}
+/* Phone-fit championship tables: no forced desktop width and no sideways page overflow. */
+#season .standingsTableScrollV40{width:100%;max-width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+#season .standingsArchiveTableV40{max-width:100%}
+@media(max-width:760px){
+ #season .wrap{width:100%;max-width:100%;padding-left:10px!important;padding-right:10px!important;box-sizing:border-box}
+ #season .modulehead{gap:8px;align-items:flex-start}#season .modulehead h1{font-size:28px}
+ #season .card{padding:12px!important;max-width:100%;box-sizing:border-box}
+ #season .standingsHeroV40{display:block}.standingsHeroV40>.card+ .card{margin-top:10px}
+ #season .standingsSummaryV40 h2{font-size:19px}.standingsLiveGridV40{grid-template-columns:1fr 1fr!important;gap:7px}.standingsLiveGridV40>div{padding:8px;border:1px solid #e2e6eb;border-radius:8px;background:#f8fafb}.standingsLiveGridV40 .big{font-size:24px}
+ #season .standingsTimelineV40{margin-left:-2px;margin-right:-2px}.standingsRoundBtnV40{padding:7px 8px;font-size:10.5px}
+ #season .standingsArchiveHeadV40 h2{font-size:18px}.standingsTabsV40{width:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:5px}.standingsTabsV40 .mini{width:100%;padding:7px 3px;font-size:10.5px}
+ #season .standingsTableScrollV40{overflow-x:hidden!important}
+ #season .standingsArchiveTableV40{min-width:0!important;width:100%!important;table-layout:fixed;font-size:10.5px}
+ #season .standingsArchiveTableV40 th{font-size:10.5px;padding:6px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #season .standingsArchiveTableV40 td{font-size:10.5px;padding:7px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #season .standingsArchiveTableV40 th:first-child,#season .standingsArchiveTableV40 td:first-child{width:26px}
+ #season .standingsArchiveTableV40 th:nth-last-child(1),#season .standingsArchiveTableV40 td:nth-last-child(1){width:48px}
+ #season .standingsDeltaV40{font-size:10.5px;margin-left:1px}.standingsResultTagV40{font-size:10.5px;padding:2px 4px}
+ .raceWeekendLaunchV405{min-height:142px;padding:17px 17px 16px;margin:9px 0 11px}.raceWeekendLaunchV405 h2{font-size:27px;margin-top:14px}.raceWeekendLaunchV405 .raceLaunchBottomV405{align-items:center}.raceWeekendLaunchV405 .raceLaunchHintV405{max-width:70%}
+ #career .compactModules>.module:nth-child(4){grid-column:1/-1!important;min-height:112px!important}
+ #career .compactModules>.module:nth-child(5){grid-column:1!important}
+ #career .compactModules>.module:nth-child(6){grid-column:2!important}
+ .raceOpsNextV405{justify-content:stretch}.raceOpsNextV405 .btn{width:100%}
+}
+@media(max-width:390px){#season .standingsArchiveTableV40 td{font-size:10.5px;padding-left:2px;padding-right:2px}#season .standingsArchiveTableV40 th{font-size:10.5px;padding-left:2px;padding-right:2px}.raceWeekendLaunchV405 h2{font-size:25px}}
+
+
+
+#raceWeekendLaunchV405{touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,.08);user-select:none}
+#raceWeekendLaunchV405[role="button"]{outline:none}
+#raceWeekendLaunchV405:active{transform:scale(.995)}
+
+
+
+#raceOpsEventV40:empty{display:none}
+.raceOpsChoiceGridV408{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}
+.raceOpsChoiceV408{border:1px solid #dfe4ea;background:#f8fafb;border-radius:12px;padding:13px;cursor:pointer;min-width:0}
+.raceOpsChoiceV408:active{transform:scale(.99)}
+.raceOpsChoiceV408 b{display:block;font-size:14px;margin-bottom:6px;color:#191d23}
+.raceOpsChoiceV408>span{display:block;font-size:11px;line-height:1.6;color:#6d7681;min-height:44px}
+.raceOpsChoiceV408 .v408Effects{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.raceOpsChoiceV408 .v408Effects small{border-radius:999px;padding:4px 6px;background:#edf1f4;font-size:10.5px;font-weight:800}
+.raceOpsChoiceV408 .v408Effects small.up{color:#118b52;background:#e9f7ef}.raceOpsChoiceV408 .v408Effects small.down{color:#c63832;background:#fff0ef}
+.raceOpsEventV408{padding:18px!important}.raceOpsEventV408 h2{font-size:24px;margin:6px 0 8px}.raceOpsEventV408>p{font-size:12px;line-height:1.75;color:#68727e}
+.raceOpsPromptV408{padding:10px 11px;margin-top:12px;border-radius:9px;background:#fff6e7;border:1px solid #ecd59d;color:#765f2d;font-size:11px;line-height:1.65}
+.raceOpsNextV408{margin-top:14px;padding-top:14px;border-top:1px solid #e4e8ed}.raceOpsNextV408 .btn{width:100%}
+@media(max-width:720px){.raceOpsChoiceGridV408{grid-template-columns:1fr}.raceOpsChoiceV408>span{min-height:0}.raceOpsEventV408{padding:14px!important}.raceOpsEventV408 h2{font-size:20px}.raceOpsChoiceV408{padding:12px}.raceOpsEffectGridV40{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+
+
+.weatherPanelV410{margin:14px 0 16px;padding:13px 14px;border:1px solid #dfe4ea;border-radius:13px;background:linear-gradient(135deg,#f7f9fb,#eef2f5)}
+.weatherTopV410{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.weatherTopV410 b{font-size:14px;color:#171b21}.weatherTopV410 small{font-size:10.5px;color:#737c87}
+.weatherStagesV410{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:11px}.weatherStageV410{background:#fff;border:1px solid #e2e6eb;border-radius:10px;padding:9px;text-align:center}.weatherStageV410 span{display:block;font-size:10.5px;letter-spacing:.12em;color:#8b929c;text-transform:uppercase}.weatherStageV410 strong{display:block;margin-top:4px;font-size:12px;color:#1e232a}.weatherStageV410 em{display:block;font-style:normal;font-size:17px;margin-top:3px}
+.raceStrategySectionV410{margin-top:15px}.raceStrategyTitleV410{display:flex;justify-content:space-between;align-items:end;gap:8px;margin-bottom:8px}.raceStrategyTitleV410 b{font-size:14px}.raceStrategyTitleV410 span{font-size:10.5px;color:#858d98}
+.tyreGridV410{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tyreChoiceV410{background:#fff;border:1px solid #dfe4ea;border-radius:11px;padding:11px;cursor:pointer;min-width:0}.tyreChoiceV410.selected{border-color:#e10600;box-shadow:inset 0 -2px #e10600;background:#fff6f5}.tyreChoiceV410 b{display:block;font-size:12px;color:#1c2026}.tyreChoiceV410 small{display:block;margin-top:5px;font-size:10.5px;line-height:1.55;color:#77808b}.tyreRouteV410{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:8px}.tyreChipV410{display:inline-flex;align-items:center;justify-content:center;min-width:27px;height:24px;padding:0 7px;border-radius:999px;font-size:10.5px;font-weight:900;background:#222;color:#fff}.tyreChipV410.soft{background:#e23b35}.tyreChipV410.medium{background:#e2bd31;color:#222}.tyreChipV410.hard{background:#f1f1f1;color:#333;border:1px solid #cfd3d8}.tyreChipV410.inter{background:#35a968}.tyreChipV410.wet{background:#2875cb}.tyreArrowV410{font-size:10.5px;color:#9299a2}.tyreMetaV410{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.tyreMetaV410 span{font-size:10.5px;padding:4px 6px;border-radius:999px;background:#eef1f4;color:#6d7580}
+.resultWeatherV410{margin-top:14px;padding:12px;border:1px solid #e2e6eb;border-radius:11px;background:#f7f9fb}.resultWeatherV410 .rwTitle{font-size:10.5px;font-weight:900;letter-spacing:.14em;color:#b21d18}.resultWeatherV410 .rwLine{font-size:12px;margin-top:5px;color:#222}.resultWeatherV410 .rwNote{font-size:10.5px;line-height:1.55;color:#747d88;margin-top:5px}.resultWeatherV410 .rwSub{font-size:10.5px;line-height:1.45;color:#7d8691;margin-top:4px}.resultWeatherCompareV410{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.resultWeatherRowV410{background:#fff;border:1px solid #e3e7ec;border-radius:9px;padding:8px}.resultWeatherRowV410 span{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#8a929b}.resultWeatherRowV410 .weatherIconsV410{font-size:16px;letter-spacing:2px;margin-top:4px}.resultWeatherRowV410 .weatherLabelsV410{font-size:10.5px;line-height:1.45;color:#5f6975;margin-top:4px}@media(max-width:720px){.resultWeatherCompareV410{grid-template-columns:1fr}}
+@media(max-width:720px){.weatherPanelV410{padding:11px}.weatherStagesV410{gap:5px}.weatherStageV410{padding:8px 5px}.tyreGridV410{grid-template-columns:1fr}.tyreChoiceV410{padding:11px}.raceStrategyTitleV410{align-items:flex-start;flex-direction:column;gap:2px}}
+
+
+
+#qualStrategies,#raceStrategies,#raceApproachTitleV410{display:none!important}
+.qualAutoV411{margin-top:12px;padding:12px 13px;border:1px solid #dfe4ea;border-radius:11px;background:#f7f9fb;color:#66717e;font-size:11px;line-height:1.65}
+#qualStart{min-height:48px}
+#raceStart{min-height:50px}
+.raceControlWrapV411{max-width:850px;margin:auto;padding:24px 20px 46px}.raceControlHeadV411{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.raceControlHeroV411{position:relative;overflow:hidden;border-radius:18px;padding:20px;background:linear-gradient(135deg,#181d25,#242a33);color:#fff;box-shadow:0 16px 42px rgba(26,32,42,.14)}
+.raceControlHeroV411.vsc{border-left:7px solid #e4c72d}.raceControlHeroV411.sc{border-left:7px solid #e7a52c}.raceControlHeroV411.red{border-left:7px solid #e10600}.raceControlHeroV411:after{content:"";position:absolute;width:220px;height:220px;border:42px solid rgba(255,255,255,.025);border-radius:50%;right:-85px;top:-95px}.raceControlFlagV411{font-size:12px;font-weight:950;letter-spacing:.22em;color:#cbd2db}.raceControlHeroV411 h1{position:relative;z-index:1;font-size:34px;line-height:1;margin:8px 0}.raceControlHeroV411 p{position:relative;z-index:1;max-width:650px;margin:0;color:#d2d7de;font-size:12px;line-height:1.75}.raceControlMetaV411{position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:15px}.raceControlMetaV411 div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:9px}.raceControlMetaV411 span{display:block;font-size:10.5px;color:#9ea7b4}.raceControlMetaV411 b{display:block;font-size:14px;margin-top:2px}
+.raceControlPanelV411{margin-top:12px;background:#fff;border:1px solid #dfe4ea;border-radius:15px;padding:16px}.raceControlPanelV411 h2{font-size:17px;margin:0 0 5px}.raceControlPanelV411>p{font-size:11px;color:#707a86;line-height:1.65;margin:0 0 12px}.raceControlChoicesV411{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.raceControlChoiceV411{border:1px solid #dfe4ea;border-radius:11px;background:#f8fafb;padding:12px;cursor:pointer}.raceControlChoiceV411:active{transform:scale(.99)}.raceControlChoiceV411 b{display:block;font-size:13px;color:#1e232a}.raceControlChoiceV411 small{display:block;margin-top:5px;font-size:10.5px;line-height:1.6;color:#6f7985}.raceControlChoiceV411 em{display:inline-block;margin-top:8px;padding:4px 6px;border-radius:999px;background:#eceff3;color:#68727e;font-size:10.5px;font-style:normal;font-weight:850}
+.liveRaceTagV411{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 7px;background:#eef1f4;color:#697481;font-size:10.5px;font-weight:900}.liveRaceDotV411{width:6px;height:6px;border-radius:50%;background:#e10600}.raceEventProgressV411{font-size:10.5px;color:#7c8590;margin-bottom:7px}.resultControlV411{margin-top:10px;padding-top:10px;border-top:1px solid #e1e5ea}.resultControlV411 .rwTitle{font-size:10.5px;font-weight:950;letter-spacing:.13em;color:#b22620}.resultControlV411 .rowV411{padding:6px 0;border-bottom:1px dashed #e2e6eb;font-size:10.5px;line-height:1.55;color:#606b77}.resultControlV411 .rowV411:last-child{border-bottom:0}.raceNoApproachV411{font-size:10.5px;color:#6f7985;margin-top:7px}
+@media(max-width:720px){.raceControlWrapV411{padding:16px 12px 36px}.raceControlHeroV411{padding:16px 14px;border-radius:14px}.raceControlHeroV411 h1{font-size:27px}.raceControlMetaV411{grid-template-columns:1fr}.raceControlChoicesV411{grid-template-columns:1fr}.raceControlChoiceV411{padding:12px}.raceControlPanelV411{padding:13px}}
+
+
+
+.strategyReviewV413{margin-top:14px;border:1px solid #dfe4ea;border-radius:14px;background:linear-gradient(135deg,#fff,#f6f8fa);overflow:hidden;color:#1b2027}
+.strategyReviewHeadV413{display:grid;grid-template-columns:78px 1fr;gap:13px;align-items:center;padding:14px 15px;border-bottom:1px solid #e1e5ea}
+.strategyGradeV413{width:70px;height:70px;border-radius:13px;background:#171c24;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 10px 24px rgba(25,31,39,.12)}
+.strategyGradeV413 span{font-size:10.5px;letter-spacing:.14em;color:#abb3bf}.strategyGradeV413 b{font-size:31px;line-height:1;margin-top:3px}.strategyReviewHeadV413 h3{font-size:17px;margin:2px 0 5px}.strategyReviewHeadV413 p{font-size:10.5px!important;line-height:1.65!important;margin:0!important;color:#68727e!important}
+.strategyReviewStatsV413{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;padding:11px 14px;background:#f3f5f7}.strategyReviewStatsV413 div{background:#fff;border:1px solid #e0e4e9;border-radius:9px;padding:8px}.strategyReviewStatsV413 span{display:block;font-size:10.5px;color:#8a929d}.strategyReviewStatsV413 b{display:block;font-size:12px;margin-top:3px;line-height:1.4}
+.strategyReviewBodyV413{padding:13px 14px 14px}.strategyReviewLabelV413{font-size:10.5px;font-weight:950;letter-spacing:.16em;color:#b31f1a;margin:0 0 7px}.strategyDecisionV413{display:grid;grid-template-columns:34px 1fr auto;gap:9px;align-items:start;padding:10px 0;border-bottom:1px dashed #dfe3e8}.strategyDecisionV413:last-child{border-bottom:0}.strategyDecisionMarkV413{height:30px;border-radius:8px;background:#eef1f4;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:950;color:#535e6a}.strategyDecisionCopyV413 b{display:block;font-size:11.5px;line-height:1.4}.strategyDecisionCopyV413 small{display:block;margin-top:4px;font-size:10.5px;line-height:1.6;color:#737d89}.strategyDecisionVerdictV413{white-space:nowrap;font-size:10.5px;font-weight:900;padding:4px 6px;border-radius:999px;background:#edf0f3;color:#626d79}.strategyDecisionVerdictV413.good{background:#e9f6ef;color:#278352}.strategyDecisionVerdictV413.great{background:#e8f2ff;color:#286db7}.strategyDecisionVerdictV413.bad{background:#fff0ee;color:#b6443d}.strategyDecisionVerdictV413.mid{background:#f6f1e4;color:#8b6c26}
+.strategySummaryV413{margin-top:11px;padding:10px 11px;border-left:3px solid #e10600;background:#fff7f6;border-radius:0 9px 9px 0;font-size:10.5px;line-height:1.7;color:#5e6874}.strategySummaryV413 b{color:#20252c}
+.strategyAutoV413{padding:13px 14px;font-size:10.5px;line-height:1.7;color:#69737f}
+@media(max-width:720px){.strategyReviewHeadV413{grid-template-columns:62px 1fr;padding:12px}.strategyGradeV413{width:58px;height:58px}.strategyGradeV413 b{font-size:25px}.strategyReviewStatsV413{grid-template-columns:1fr 1fr;padding:9px 11px}.strategyReviewStatsV413 div:last-child{grid-column:1/-1}.strategyReviewBodyV413{padding:11px 12px}.strategyDecisionV413{grid-template-columns:31px 1fr;gap:8px}.strategyDecisionVerdictV413{grid-column:2;justify-self:start}.strategyDecisionMarkV413{height:28px}}
+
+
+
+#raceQuickSimV4131{position:relative;z-index:4;border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.09);color:#fff;border-radius:9px;padding:9px 12px;font-size:10.5px;font-weight:950;letter-spacing:.04em;white-space:nowrap;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,.08)}
+#raceQuickSimV4131:active{transform:scale(.98);background:rgba(255,255,255,.14)}
+#raceQuickSimV4131.resultReady{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#d6dbe1}
+@media(max-width:720px){.raceWeekendLaunchV405 .raceLaunchBottomV405{flex-wrap:wrap}.raceWeekendLaunchV405 .raceLaunchHintV405{max-width:100%!important;flex:1 1 100%}#raceQuickSimV4131{flex:1 1 auto;padding:10px 11px}.raceWeekendLaunchV405 .raceLaunchGoV405{flex:0 0 auto}}
+
+
+
+.customTyreBuilderV4132{margin-top:10px}
+.customTyreStintsV4132{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.customTyreStintV4132{border:1px solid #dfe4ea;border-radius:12px;background:#fff;padding:11px}
+.customTyreStintV4132>span{display:block;font-size:10.5px;letter-spacing:.14em;font-weight:900;color:#8b929c;margin-bottom:7px}
+.customTyreChoicesV4132{display:flex;gap:6px;flex-wrap:wrap}
+.customTyreChipV4132{border:2px solid transparent;min-width:50px;height:38px;padding:0 8px;border-radius:999px;font-size:10.5px;font-weight:950;cursor:pointer;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.customTyreChipV4132.soft{background:#e23b35;color:#fff}.customTyreChipV4132.medium{background:#e2bd31;color:#222}.customTyreChipV4132.hard{background:#f6f6f6;color:#31363d;border-color:#d6dbe0}.customTyreChipV4132.inter{background:#35a968;color:#fff}.customTyreChipV4132.wet{background:#2875cb;color:#fff}
+.customTyreChipV4132.selected{box-shadow:0 0 0 3px rgba(225,6,0,.17);border-color:#e10600}
+.customTyreRouteV4132{margin-top:9px;padding:9px 10px;border-radius:10px;background:#f4f6f8;font-size:11px;color:#5f6975;line-height:1.6}.customTyreRouteV4132 b{color:#20252b}
+.engineerRecV4132{margin-top:10px;border:1px solid #dfe4ea;border-left:4px solid #e10600;border-radius:11px;background:linear-gradient(135deg,#fff,#f7f8fa);padding:11px 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.engineerRecV4132 span{display:block;font-size:10.5px;letter-spacing:.13em;color:#b32620;font-weight:950}.engineerRecV4132 b{display:block;font-size:13px;margin-top:3px}.engineerRecV4132 p{font-size:10.5px;line-height:1.6;color:#6f7985;margin:4px 0 0}.engineerRecV4132 button{border:0;border-radius:8px;background:#20252d;color:#fff;font-size:10.5px;font-weight:900;padding:9px 10px;cursor:pointer;white-space:nowrap}
+.customTyreWarnV4132{margin-top:8px;font-size:10.5px;color:#b74840;line-height:1.55}
+.raceReviewV4132{margin-top:14px;border:1px solid #dfe4ea;border-radius:14px;background:#fff;overflow:hidden}
+.raceReviewHeadV4132{display:grid;grid-template-columns:72px 1fr;gap:13px;align-items:center;padding:14px 15px;background:linear-gradient(135deg,#181d25,#242a33);color:#fff}.raceReviewGradeV4132{height:64px;border-radius:12px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;align-items:center;justify-content:center}.raceReviewGradeV4132 span{font-size:10.5px;color:#aeb7c2;letter-spacing:.14em}.raceReviewGradeV4132 b{font-size:28px;line-height:1;margin-top:3px}.raceReviewHeadV4132 h3{font-size:17px;margin:2px 0 5px}.raceReviewHeadV4132 p{font-size:10.5px!important;line-height:1.65!important;margin:0!important;color:#ccd2da!important}
+.raceReviewGridV4132{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:11px 13px;background:#f4f6f8}.raceReviewMetricV4132{background:#fff;border:1px solid #e0e4e9;border-radius:10px;padding:9px}.raceReviewMetricV4132 span{display:block;font-size:10.5px;color:#8b939d}.raceReviewMetricV4132 b{display:block;font-size:14px;margin-top:3px}.raceReviewMetricV4132 small{display:block;font-size:10.5px;line-height:1.5;color:#737d88;margin-top:3px}
+.raceReviewNoteV4132{padding:11px 13px;font-size:10.5px;line-height:1.7;color:#626d78;border-top:1px solid #e5e8ec}.raceReviewNoteV4132 b{color:#20252b}
+@media(max-width:720px){.customTyreStintsV4132{grid-template-columns:1fr}.engineerRecV4132{grid-template-columns:1fr}.engineerRecV4132 button{width:100%}.customTyreChipV4132{min-width:48px;flex:1 1 48px}.raceReviewHeadV4132{grid-template-columns:58px 1fr;padding:12px}.raceReviewGradeV4132{height:54px}.raceReviewGradeV4132 b{font-size:24px}.raceReviewGridV4132{grid-template-columns:1fr 1fr;padding:9px 10px}.raceReviewMetricV4132:last-child{grid-column:1/-1}}
+
+
+
+.tyreStintListV4133{display:grid;gap:9px;margin-top:10px}
+.tyreStintCardV4133{border:1px solid #dfe4ea;border-radius:12px;background:#fff;padding:11px}
+.tyreStintHeadV4133{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:7px}.tyreStintHeadV4133 span{font-size:10.5px;letter-spacing:.14em;font-weight:950;color:#8b929c}.tyreStintHeadV4133 button{border:0;background:#eef1f4;color:#6f7883;border-radius:999px;min-width:26px;height:26px;font-size:15px;font-weight:900;cursor:pointer}
+.tyreAddStintV4133{width:100%;margin-top:9px;min-height:42px;border:1px dashed #bfc6cf;border-radius:11px;background:#f8fafb;color:#333b45;font-size:11px;font-weight:950;cursor:pointer}.tyreAddStintV4133 b{font-size:18px;vertical-align:-1px;margin-right:4px}
+.tyrePlanStatusV4133{margin-top:9px;padding:10px 11px;border-radius:10px;background:#f4f6f8;color:#606b77;font-size:10.5px;line-height:1.65}.tyrePlanStatusV4133 strong{color:#20252b}.tyrePlanStatusV4133.bad{background:#fff2f0;color:#9a3c35}.tyrePlanStatusV4133.bad strong{color:#8f2c26}
+.tyreWearForecastV4133{margin-top:9px;border:1px solid #e0e4e9;border-radius:11px;background:#fff;padding:10px 11px}.tyreWearForecastV4133 .label{font-size:10.5px;font-weight:950;letter-spacing:.13em;color:#8d949d}.tyreWearForecastV4133 .line{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}.tyreWearPillV4133{border-radius:999px;padding:5px 7px;background:#eef1f4;font-size:10.5px;font-weight:850;color:#5f6974}.tyreWearPillV4133.warn{background:#fff0df;color:#9a5b17}.tyreWearPillV4133.danger{background:#ffe8e5;color:#a1352d}.tyreWearForecastV4133 p{margin:7px 0 0;font-size:10.5px!important;line-height:1.6!important;color:#737d87!important}
+.tyreRuleV4133{margin-top:8px;font-size:10.5px;color:#747d88;line-height:1.65}.tyreRuleV4133 b{color:#20252b}
+.tyreSingleWetV41323{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.tyreSingleWetV41323 button{min-height:38px;border:1px solid #d7dde4;border-radius:10px;background:#f7f9fb;color:#303841;font-size:10.5px;font-weight:900;cursor:pointer}.tyreSingleWetV41323 button:active{transform:scale(.99)}
+.tyreResultModelV4133{margin-top:9px;padding:9px 10px;border-radius:10px;background:#f4f6f8;font-size:10.5px;line-height:1.7;color:#69737f}.tyreResultModelV4133 b{color:#222830}
+@media(max-width:720px){.tyreStintCardV4133{padding:10px}.tyreAddStintV4133{min-height:44px}.tyreWearForecastV4133{padding:9px 10px}.tyreSingleWetV41323{grid-template-columns:1fr}}
+
+
+
+.compactRaceRatingV4136{min-height:205px;border:1px solid #2f3540;border-radius:16px;background:linear-gradient(145deg,#171c24,#242b35);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:23px 20px;color:#fff}
+.compactRaceRatingV4136 .grade{font-size:82px;line-height:.88;font-weight:1000;letter-spacing:-.06em}
+.compactRaceRatingV4136 .subtitle{margin-top:13px;font-size:16px;font-weight:850;line-height:1.5;color:#e4e8ed}.compactRaceRatingV4136 .subtitle.lovely{font-style:italic;font-weight:750}
+.compactRaceCommentsV4136{width:min(560px,100%);margin-top:16px;padding-top:13px;border-top:1px solid rgba(255,255,255,.11);display:grid;gap:6px}
+.compactRaceCommentsV4136 p{margin:0!important;color:#c8cfd7!important;font-size:11px!important;line-height:1.65!important}.compactRaceCommentsV4136 p strong{color:#fff}
+@media(max-width:720px){.compactRaceRatingV4136{min-height:180px;padding:20px 14px}.compactRaceRatingV4136 .grade{font-size:68px}.compactRaceRatingV4136 .subtitle{font-size:14px}.compactRaceCommentsV4136{margin-top:13px;padding-top:11px}.compactRaceCommentsV4136 p{font-size:10.5px!important}}
+
+
+
+#weekendresult .resultSummary .longRaceReportV4137{margin-top:10px}
+#weekendresult .longRaceReportV4137 p{font-size:12.5px!important;line-height:1.92!important;color:#596473!important;margin:10px 0 0!important;white-space:normal}
+#weekendresult .longRaceReportV4137 .reportMetaV4137{margin-top:13px;padding-top:10px;border-top:1px solid #e1e5ea;font-size:10.5px;color:#87919c;line-height:1.6}
+@media(max-width:720px){#weekendresult .longRaceReportV4137 p{font-size:12px!important;line-height:1.88!important}.longRaceReportV4137 .reportMetaV4137{font-size:10.5px}}
+
+
+
+/* Bottom utility row: standings and trophy room sit side by side. */
+#career .compactModules>.standingsModuleV40{grid-column:1!important;min-height:142px!important}
+#career .compactModules>.achievementModuleV3{grid-column:2!important;min-height:142px!important}
+#career .compactModules>.standingsModuleV40 p,#career .compactModules>.achievementModuleV3 p{max-width:92%;line-height:1.5}
+/* Driver dossier footer. */
+#career .driverhubclick:after{display:none!important}
+.driverHubTeamsLinkV1311{width:100%;margin-top:12px;padding:9px 10px 0;border:0;border-top:1px solid #e1e5ea;background:transparent;color:#5f6874;text-align:left;font-size:10.5px;font-weight:950;letter-spacing:.08em;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.driverHubTeamsLinkV1311:hover{color:#d20b06}.driverHubTeamsLinkV1311 b{font-size:13px;color:inherit}.driverHubTeamsLinkV1311 span{font-size:15px}
+/* Current-season expanded driver standings. */
+.seasonDriverStatsV1311{margin:12px 0;padding:0!important;overflow:hidden}.seasonDriverStatsHeadV1311{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:15px 16px 10px}.seasonDriverStatsHeadV1311 h2{margin:3px 0 0;font-size:20px}.seasonDriverStatsScrollV1311{overflow:auto;width:100%}.seasonDriverStatsTableV1311{width:100%;border-collapse:collapse;font-size:11px;min-width:760px}.seasonDriverStatsTableV1311 th{font-size:10.5px;letter-spacing:.04em;color:#7a8490;text-align:right;padding:8px 9px;border-top:1px solid #e4e8ed;border-bottom:1px solid #dfe4ea;white-space:nowrap}.seasonDriverStatsTableV1311 td{text-align:right;padding:8px 9px;border-bottom:1px solid #edf0f3;white-space:nowrap}.seasonDriverStatsTableV1311 th:nth-child(2),.seasonDriverStatsTableV1311 td:nth-child(2),.seasonDriverStatsTableV1311 th:nth-child(3),.seasonDriverStatsTableV1311 td:nth-child(3){text-align:left}.seasonDriverStatsTableV1311 tr.mine{background:#fff1f0}.seasonDriverStatsTableV1311 .rankV1311{font-weight:950;color:#252a31}.seasonDriverStatsTableV1311 .nameV1311{font-weight:900}.seasonDriverStatsTableV1311 .teamV1311{color:#7a8490;font-size:10.5px}.seasonDriverStatsTableV1311 .pointsV1311{font-size:14px;color:#171b22}.seasonDriverStatsTableV1311 .fastV1311{font-weight:900;color:#6a4d9b}
+/* Full grid / all teams screen. */
+#teamsgridV1311{background:#f3f5f7;min-height:100vh}.teamsGridHeroV1311{position:relative;overflow:hidden;border-radius:18px;background:linear-gradient(120deg,#171b22,#282f39);color:#fff;padding:24px 26px;margin-bottom:13px}.teamsGridHeroV1311:after{content:'GRID';position:absolute;right:-18px;bottom:-42px;font-size:128px;font-style:italic;font-weight:1000;letter-spacing:-8px;color:rgba(255,255,255,.04)}.teamsGridHeroV1311 h2{position:relative;z-index:1;font-size:34px;margin:5px 0 7px;letter-spacing:-1px}.teamsGridHeroV1311 p{position:relative;z-index:1;max-width:650px;margin:0;color:#b7c0cb;font-size:12px;line-height:1.7}.teamsGridSummaryV1311{position:relative;z-index:1;display:flex;gap:18px;margin-top:16px}.teamsGridSummaryV1311 div span{display:block;font-size:10.5px;color:#929daa;letter-spacing:.12em}.teamsGridSummaryV1311 div b{display:block;font-size:18px;margin-top:2px}.allTeamsGridV1311{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.teamRosterCardV1311{--teamAccent:#e10600;position:relative;overflow:hidden;border:1px solid #dce2e8;background:#fff;border-radius:14px;padding:15px 15px 13px;box-shadow:0 5px 18px rgba(34,43,55,.045)}.teamRosterCardV1311:before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--teamAccent)}.teamRosterCardV1311.mine{border-color:#dba8a5;box-shadow:0 7px 24px rgba(190,40,35,.08)}.teamRosterWaterV1311{position:absolute;right:8px;top:-12px;font-size:68px;font-weight:1000;font-style:italic;color:rgba(25,31,39,.035);pointer-events:none}.teamRosterTopV1311{position:relative;z-index:1;display:flex;justify-content:space-between;gap:10px;align-items:start;padding-left:4px}.teamRosterRankV1311{font-size:10.5px;letter-spacing:.12em;color:#8a949f;font-weight:900}.teamRosterTopV1311 h3{font-size:19px;line-height:1.05;margin:4px 0 2px}.teamRosterMetaV1311{text-align:right}.teamRosterMetaV1311 span{display:block;font-size:10.5px;color:#8a949f}.teamRosterMetaV1311 b{display:block;font-size:18px;margin-top:2px}.teamDriversV1311{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:13px}.teamDriverV1311{background:#f7f9fb;border:1px solid #e3e7eb;border-radius:9px;padding:10px;min-width:0}.teamDriverV1311.me{background:#fff2f1;border-color:#edc7c5}.teamDriverLineV1311{display:flex;justify-content:space-between;align-items:center;gap:5px}.teamDriverLineV1311 strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.teamDriverLineV1311 em{font-style:normal;font-weight:1000;color:var(--teamAccent);font-size:17px}.teamDriverV1311 small{display:block;color:#7d8792;font-size:10.5px;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.teamDriverV1311 .driverMiniStatV1311{display:flex;justify-content:space-between;gap:8px;margin-top:7px;padding-top:6px;border-top:1px solid #e4e8ec;font-size:10.5px;color:#7b8590}.teamDriverV1311 .driverMiniStatV1311 b{color:#292e35;font-size:11px}
+@media(max-width:760px){
+ #career .compactModules>.standingsModuleV40,#career .compactModules>.achievementModuleV3{min-height:132px!important}
+ .seasonDriverStatsHeadV1311{padding:12px 12px 8px}.seasonDriverStatsTableV1311{min-width:650px}.seasonDriverStatsTableV1311 th,.seasonDriverStatsTableV1311 td{padding:7px 7px}
+ .allTeamsGridV1311{grid-template-columns:1fr}.teamsGridHeroV1311{padding:19px}.teamsGridHeroV1311 h2{font-size:28px}.teamsGridHeroV1311:after{font-size:92px}.teamDriversV1311{grid-template-columns:1fr 1fr}
+}
+@media(max-width:390px){#career .compactModules>.standingsModuleV40,#career .compactModules>.achievementModuleV3{grid-column:auto!important}.teamDriversV1311{grid-template-columns:1fr}.teamsGridSummaryV1311{gap:12px}}
+
+
+
+/* Force the two bottom utility cards into the same row on phones as well.
+   Earlier Patch 05 used :nth-child selectors with higher specificity, so override them explicitly. */
+#career .compactModules>.module.standingsModuleV40:nth-child(4){grid-column:1!important;min-height:116px!important;padding-bottom:34px!important}
+#career .compactModules>.module.achievementModuleV3:nth-child(5),
+#career .compactModules>.module.achievementModuleV3:last-child:nth-child(odd){grid-column:2!important;min-height:116px!important;padding-bottom:34px!important}
+#career .compactModules>.standingsModuleV40 h2,#career .compactModules>.achievementModuleV3 h2{font-size:17px!important;margin:5px 0 4px!important}
+#career .compactModules>.standingsModuleV40 p,#career .compactModules>.achievementModuleV3 p{font-size:10.5px!important;line-height:1.35!important;-webkit-line-clamp:2!important;max-width:100%!important}
+#career .compactModules>.standingsModuleV40 .statusline,#career .compactModules>.achievementModuleV3 .statusline{font-size:10.5px!important}
+
+/* Previous-season browser inside the standings page. */
+.seasonHistoryV1312{margin-top:12px;padding:0!important;overflow:hidden}
+.seasonHistoryHeadV1312{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;padding:14px 16px 10px;border-bottom:1px solid #e5e9ee}
+.seasonHistoryHeadV1312 h2{font-size:20px;margin:3px 0 0}.seasonHistoryHeadV1312 .small{text-align:right}
+.seasonHistoryGridV1312{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:12px 14px 14px}
+.seasonHistoryCardV1312{border:1px solid #dfe4ea;border-radius:10px;background:#f8fafb;padding:11px;cursor:pointer;transition:.15s;min-width:0}
+.seasonHistoryCardV1312:hover{transform:translateY(-1px);border-color:#aeb7c1;background:#fff}
+.seasonHistoryCardV1312 .year{font-size:19px;font-weight:1000;color:#1d2229;letter-spacing:-.5px}.seasonHistoryCardV1312 .meta{margin-top:4px;font-size:10.5px;color:#85909c;letter-spacing:.08em}
+.seasonHistoryCardV1312 .champ{margin-top:9px;padding-top:8px;border-top:1px solid #e2e7ec;display:grid;gap:5px}.seasonHistoryCardV1312 .champ span{display:flex;justify-content:space-between;gap:8px;font-size:10.5px;color:#737e89}.seasonHistoryCardV1312 .champ b{color:#252b32;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.seasonHistoryEmptyV1312{padding:18px 16px;color:#7c8691;font-size:11px;line-height:1.7}
+
+/* Archive modal. */
+.histSeasonHeroV1312{background:linear-gradient(120deg,#181d25,#2c333d);color:#fff;border-radius:12px;padding:16px;margin-bottom:10px;position:relative;overflow:hidden}.histSeasonHeroV1312:after{content:'ARCHIVE';position:absolute;right:-12px;bottom:-22px;font-size:52px;font-weight:1000;font-style:italic;color:rgba(255,255,255,.035)}
+.histSeasonHeroV1312 h2{font-size:27px;margin:4px 0 8px;position:relative;z-index:1}.histSeasonSummaryV1312{display:grid;grid-template-columns:1fr 1fr 90px;gap:7px;position:relative;z-index:1}.histSeasonSummaryV1312 div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);border-radius:8px;padding:8px}.histSeasonSummaryV1312 span{display:block;font-size:10.5px;color:#aeb7c1}.histSeasonSummaryV1312 b{display:block;font-size:13px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.histRoundsV1312{display:flex;gap:5px;overflow:auto;padding:7px 0 10px}.histRoundBtnV1312{white-space:nowrap;border:1px solid #dfe4ea;background:#fff;border-radius:8px;padding:7px 9px;font:850 10.5px inherit;color:#68737f;cursor:pointer}.histRoundBtnV1312.active{background:#20252d;color:#fff;border-color:#20252d}
+.histTabsV1312{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:2px 0 8px}.histTabsV1312 button{border:1px solid #dfe4ea;background:#f7f9fb;border-radius:8px;padding:7px;font:900 10.5px inherit;color:#6c7681;cursor:pointer}.histTabsV1312 button.active{background:#20252d;color:#fff;border-color:#20252d}
+.histTableWrapV1312{overflow:auto;border:1px solid #e1e5ea;border-radius:9px}.histTableV1312{width:100%;border-collapse:collapse;font-size:10.5px;min-width:470px}.histTableV1312 th{font-size:10.5px;color:#818a95;text-align:right;padding:7px;border-bottom:1px solid #dfe4ea;background:#f7f9fb}.histTableV1312 td{text-align:right;padding:7px;border-bottom:1px solid #edf0f3}.histTableV1312 th:nth-child(2),.histTableV1312 td:nth-child(2){text-align:left}.histTableV1312 tr.mine{background:#fff1f0}.histDnfV1312{color:#b41611;font-weight:900}
+@media(max-width:760px){
+ #career .compactModules>.module.standingsModuleV40:nth-child(4),#career .compactModules>.module.achievementModuleV3:nth-child(5),#career .compactModules>.module.achievementModuleV3:last-child:nth-child(odd){min-height:112px!important}
+ .seasonHistoryGridV1312{grid-template-columns:1fr 1fr;padding:10px}.seasonHistoryHeadV1312{padding:12px 12px 8px}.seasonHistoryHeadV1312 h2{font-size:18px}
+ .histSeasonSummaryV1312{grid-template-columns:1fr 1fr}.histSeasonSummaryV1312 div:last-child{grid-column:1/-1}.histTableV1312{min-width:430px}
+}
+@media(max-width:360px){#career .compactModules>.standingsModuleV40 h2,#career .compactModules>.achievementModuleV3 h2{font-size:16px!important}.seasonHistoryGridV1312{grid-template-columns:1fr}}
+
+
+
+.strategyPanelV41317{margin-top:14px;padding-top:13px;border-top:1px solid #e3e7ec}
+.strategyPanelHeadV41317{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:8px}
+.strategyPanelHeadV41317 h3{margin:2px 0 0;font-size:17px}.strategyPanelHeadV41317 .small{font-size:10.5px;color:#7a8490}
+.strategyTableWrapV41317{overflow:auto;border:1px solid #e1e5ea;border-radius:10px;background:#fff}
+.strategyTableV41317{width:100%;min-width:650px;border-collapse:collapse;font-size:11px}
+.strategyTableV41317 th{padding:7px 8px;text-align:left;color:#7b8590;background:#f6f8fa;border-bottom:1px solid #e1e5ea;font-size:10.5px;letter-spacing:.45px;white-space:nowrap}
+.strategyTableV41317 td{padding:7px 8px;border-bottom:1px solid #edf0f3;white-space:nowrap}.strategyTableV41317 tr:last-child td{border-bottom:0}.strategyTableV41317 tr.me{background:#fff3f2}
+.strategyTyresV41317{font-weight:900;color:#20252d}.strategyApproachV41317{display:inline-flex;padding:3px 6px;border-radius:999px;background:#eef2f5;color:#56616d;font-size:10.5px;font-weight:850}.strategyApproachV41317.attack{background:#fff0ef;color:#ad2a25}.strategyApproachV41317.safe{background:#eef7f2;color:#26704d}
+.strategyNoDataV41317{padding:12px;border:1px dashed #dce2e8;border-radius:9px;color:#7d8691;font-size:11px;background:#fafbfc}
+#standingsArchiveBodyV40>.strategyPanelV41317{margin-top:12px}.histStrategyMountV41317{margin-top:12px}
+@media(max-width:560px){.strategyPanelHeadV41317{align-items:flex-start;flex-direction:column}.strategyTableV41317{min-width:590px}}
+
+
+
+.weatherTrailV1318{margin:10px 0 12px;padding:12px 14px;border:1px solid #e6ebf0;border-radius:12px;background:#f8fafc}.weatherTrailV1318 .wtHead{font-size:12px;font-weight:900;letter-spacing:.14em;color:#65707c;margin-bottom:8px}.weatherTrailV1318 .wtBlock{margin-top:8px}.weatherTrailV1318 .wtLabel{font-size:11px;font-weight:900;letter-spacing:.12em;color:#707a86;margin-bottom:6px}.weatherTrailV1318 .wtLine{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:15px;font-weight:800;color:#1f2630}.weatherTrailV1318 .wtStep{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid #e8edf2}.weatherTrailV1318 .wtArrow{color:#95a0ab;font-weight:900}.weatherTrailV1318 .wtNote{margin-top:8px;font-size:13px;color:#6a7480;line-height:1.55}@media(max-width:720px){.weatherTrailV1318 .wtLine{gap:6px}.weatherTrailV1318 .wtStep{padding:4px 7px}}
+
+
+
+.techCyclePanelV1319{margin:10px 0 12px;padding:11px 12px;border:1px solid #dfe5eb;border-radius:11px;background:linear-gradient(135deg,#fff,#f6f8fa)}
+.techCyclePanelV1319 .tcHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.techCyclePanelV1319 .tcHead b{font-size:13px}.techCyclePanelV1319 .tcHead span{font-size:10.5px;color:#7a8490;font-weight:850;letter-spacing:.08em}.techCyclePanelV1319 p{margin:6px 0 0;font-size:10.5px;line-height:1.65;color:#697481}
+.techCyclePanelV1319 .tcGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}.techCyclePanelV1319 .tcCell{padding:8px;border:1px solid #e5e9ed;border-radius:8px;background:#fff}.techCyclePanelV1319 .tcCell span{display:block;font-size:10.5px;color:#818b96}.techCyclePanelV1319 .tcCell b{display:block;margin-top:3px;font-size:14px;color:#20262d}
+.techCyclePanelV1319.reg{border-color:#e4c778;background:linear-gradient(135deg,#fffaf0,#fff4d9)}.techCyclePanelV1319.reg .tcHead span{color:#9b7217}
+.devEffV1319{display:inline-block;margin-left:5px;padding:2px 5px;border-radius:999px;background:#eef2f5;color:#64707c;font-size:10.5px;font-weight:900}.devEffV1319.hot{background:#edf8f1;color:#278154}.devEffV1319.cold{background:#fff0ef;color:#ae302a}
+@media(max-width:620px){.techCyclePanelV1319 .tcGrid{grid-template-columns:1fr}.techCyclePanelV1319 .tcHead{flex-direction:column;gap:3px}}
+
+
+
+/* 13.27 CLEAN BUILD: mobile paint/compositor optimizations. */
+@media(max-width:720px){
+  .view:not(.active){display:none!important}
+  .view.active{will-change:auto!important}
+  .paddockTickerTrack{animation-duration:64s!important;will-change:transform}
+  .module,.card,.raceWeekendLaunchV405{box-shadow:none!important}
+  .overlay{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+  img{content-visibility:auto}
+}
+
+
+
+/* 13.28 DRIVER ERA: retirement breaking news + junior market. */
+.f2Market1328{margin-top:12px}.f2Grid1328{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:10px}.f2Card1328{display:grid;grid-template-columns:32px 1fr auto;gap:8px;align-items:center;padding:9px 10px;border:1px solid #e1e5ea;border-radius:9px;background:#f8fafb}.f2Rank1328{font-size:14px;font-weight:950;color:#8b949f}.f2Card1328 b{display:block;font-size:12px}.f2Card1328 small{display:block;margin-top:2px;font-size:10.5px;color:#7c8692}.f2Nums1328{text-align:right}.f2Nums1328 strong{display:block;font-size:14px}.f2Nums1328 em{font-style:normal;font-size:10.5px;color:#8a929d}
+@media(max-width:720px){.f2Grid1328{grid-template-columns:1fr}}
+
+
+
+/* 13.28.2: Chinese F1-style game-world breaking news + provisional next-season grid. */
+.f1News13282{position:fixed;inset:0;z-index:100500;display:none;align-items:center;justify-content:center;padding:18px;background:radial-gradient(circle at 76% 18%,rgba(225,6,0,.22),transparent 31%),linear-gradient(145deg,rgba(8,10,14,.97),rgba(20,23,29,.98));font-family:inherit}
+.f1News13282.open{display:flex}.f1NewsCard13282{position:relative;width:min(860px,96vw);max-height:92vh;overflow:auto;background:#11151b;color:#fff;border:1px solid rgba(255,255,255,.10);border-radius:18px;box-shadow:0 34px 110px rgba(0,0,0,.55)}
+.f1NewsCard13282:before{content:'F1';position:absolute;right:-8px;top:56px;font-size:150px;line-height:1;font-weight:1000;font-style:italic;letter-spacing:-.08em;color:rgba(255,255,255,.025);pointer-events:none}
+.f1NewsTop13282{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 17px;background:#e10600;color:#fff;font-size:11px;font-weight:950;letter-spacing:.14em}.f1NewsTop13282 b{font-size:12px}.f1NewsCount13282{opacity:.82;white-space:nowrap}
+.f1NewsBody13282{position:relative;padding:28px 30px 24px}.f1NewsTag13282{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;background:rgba(225,6,0,.15);border:1px solid rgba(225,6,0,.42);color:#ff6a65;font-size:10.5px;font-weight:950;letter-spacing:.12em}.f1NewsBody13282 h1{max-width:700px;margin:12px 0 8px;font-size:34px;line-height:1.12;letter-spacing:-.025em;color:#fff}.f1NewsLead13282{max-width:700px;margin:0;color:#b7c0cc;font-size:13px;line-height:1.75}
+.f1NewsRoute13282{display:flex;align-items:center;gap:11px;margin-top:18px;padding:13px 14px;border-left:4px solid #e10600;background:linear-gradient(90deg,rgba(225,6,0,.10),rgba(255,255,255,.03));border-radius:0 10px 10px 0}.f1NewsRoute13282 span{font-size:10.5px;color:#8f9aa7;letter-spacing:.08em}.f1NewsRoute13282 b{font-size:16px}.f1NewsArrow13282{color:#e10600;font-weight:1000;font-size:18px}
+.f1NewsStats13282{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}.f1NewsStats13282>div{padding:11px 12px;border:1px solid rgba(255,255,255,.09);border-radius:10px;background:rgba(255,255,255,.035)}.f1NewsStats13282 span{display:block;font-size:10.5px;color:#87929f;letter-spacing:.08em}.f1NewsStats13282 b{display:block;margin-top:4px;font-size:17px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f1NewsFooter13282{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px;padding-top:15px;border-top:1px solid rgba(255,255,255,.09)}.f1NewsFooter13282 small{color:#77828f;font-size:10.5px;line-height:1.5}.f1NewsBtn13282{border:0;border-radius:8px;padding:10px 14px;background:#fff;color:#15191f;font:900 11px inherit;cursor:pointer}.f1NewsBtn13282:hover{background:#e10600;color:#fff}
+.teamDriverV1311.f2Graduate13282{box-shadow:inset 3px 0 #e10600}.teamDriverV1311 .rookieBadge13282{display:inline-block;margin-top:4px;padding:2px 5px;border-radius:999px;background:#fff0ef;color:#b32620;font-size:10.5px;font-weight:950;letter-spacing:.06em}.nextGridBadge13282{display:inline-block;margin-left:7px;padding:3px 6px;border-radius:999px;background:#fff0ef;color:#b32620;font-size:10.5px;font-weight:900;vertical-align:middle}
+@media(max-width:720px){.f1News13282{padding:10px}.f1NewsBody13282{padding:21px 18px}.f1NewsBody13282 h1{font-size:27px}.f1NewsCard13282:before{font-size:100px}.f1NewsStats13282{grid-template-columns:1fr 1fr}.f1NewsFooter13282{align-items:flex-start;flex-direction:column}.f1NewsBtn13282{width:100%}}
+
+
+
+/* 13.28.3: full F2 library + hard sync from prepared off-season roster into the live 22-car grid. */
+.f2Library13283{margin-top:10px}.f2LibraryHead13283{display:flex;justify-content:space-between;gap:10px;align-items:flex-end;margin-bottom:8px}.f2LibraryHead13283 h2{margin:0;font-size:18px}.f2LibraryHead13283 small{color:#7a8490;font-size:10.5px}.f2LibraryGrid13283{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.f2LibraryRow13283{display:grid;grid-template-columns:34px minmax(0,1fr) 66px 72px;gap:8px;align-items:center;padding:8px 9px;border:1px solid #e0e5ea;border-radius:8px;background:#f8fafb}.f2LibraryRow13283.promoted{background:#fff4f2;border-color:#f0c4bf}.f2LibraryRank13283{font-weight:950;font-size:14px}.f2LibraryName13283 b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f2LibraryName13283 small{display:block;color:#7a8490;font-size:10.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f2LibraryNums13283{text-align:right}.f2LibraryNums13283 b{display:block;font-size:14px}.f2LibraryNums13283 small{font-size:10.5px;color:#7a8490}.f2LibraryStatus13283{text-align:right;font-size:10.5px;font-weight:900}.f2LibraryStatus13283 span{display:inline-block;padding:3px 5px;border-radius:999px;background:#eef2f6;color:#5f6b78}.f2LibraryRow13283.promoted .f2LibraryStatus13283 span{background:#e10600;color:#fff}
+@media(max-width:720px){.f2LibraryGrid13283{grid-template-columns:1fr}.f2LibraryRow13283{grid-template-columns:32px minmax(0,1fr) 58px 66px}}
+
+
+
+.homeSettings13285{align-self:center;background:linear-gradient(145deg,#171923,#0f1017);border:1px solid #303340;border-radius:16px;padding:22px;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.homeSettings13285 h2{font-size:25px;margin:7px 0 20px}
+.settingRow13285{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;padding:15px 0;border-top:1px solid #2d303d;border-bottom:1px solid #2d303d}
+.settingRow13285 b{display:block;font-size:15px}.settingRow13285 span{display:block;margin-top:5px;color:#85899a;font-size:11px;line-height:1.55}
+.nameLangSwitch13285{display:flex;padding:3px;border:1px solid #353846;background:#0b0c12;border-radius:9px}
+.nameLangSwitch13285 button{border:0;background:transparent;color:#8f93a3;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:800;min-width:72px}
+.nameLangSwitch13285 button.active{background:#e10600;color:#fff}
+.settingsNote13285{margin-top:13px;color:#737889;font-size:11px;line-height:1.7}
+@media(max-width:760px){.homegrid{grid-template-columns:1fr!important}.homeSettings13285{margin-top:4px;padding:17px}.settingRow13285{grid-template-columns:1fr;gap:10px}.nameLangSwitch13285{width:max-content}}
+
+
+
+#homeLogo13286{cursor:pointer;user-select:none;transition:opacity .15s ease,transform .15s ease}
+#homeLogo13286:hover{opacity:.76;transform:translateY(-1px)}
+.settingsHead13286{margin-bottom:14px}.settingsPanel13286{max-width:980px;margin:0 auto;padding:22px!important}
+.settingsTitle13286{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}.settingsTitle13286 h2{margin:5px 0 0;font-size:24px}
+.settingsBadge13286{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#171a21;color:#fff;font-size:12px;font-weight:950;letter-spacing:1px}
+#settings .settingRow13285{border-color:#e0e5eb;padding:18px 0}#settings .settingRow13285 span{color:#77818f}
+#settings .nameLangSwitch13285{background:#f2f4f7;border-color:#d9dfe6}#settings .nameLangSwitch13285 button{color:#687281}
+#settings .nameLangSwitch13285 button.active{background:#e10600;color:#fff}.contractRealityLock13286{margin-top:10px;padding:10px 12px;border:1px solid #efc4c1;background:#fff6f5;border-radius:9px;color:#7f3935;font-size:11px;line-height:1.65}
+@media(max-width:760px){.settingsPanel13286{padding:16px!important}.settingsTitle13286 h2{font-size:20px}}
