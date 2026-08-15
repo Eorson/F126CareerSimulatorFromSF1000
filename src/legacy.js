@@ -2900,32 +2900,68 @@ function deepCloneForSave(value) {
   }
 }
 function normalizeLoadedState(savedState, fallbackState = {}) {
-  const incoming = deepCloneForSave(savedState || {});
-  const fallback = deepCloneForSave(fallbackState || {});
-  const merged = {
-    ...fallback,
-    ...incoming,
-  };
-  merged.driverStandings = {
-    ...deepCloneForSave(fallback.driverStandings || {}),
-    ...deepCloneForSave(incoming.driverStandings || {}),
-  };
-  merged.teamStandings = {
-    ...deepCloneForSave(fallback.teamStandings || {}),
-    ...deepCloneForSave(incoming.teamStandings || {}),
-  };
-  merged.driverSeasonStats = {
-    ...deepCloneForSave(fallback.driverSeasonStats || {}),
-    ...deepCloneForSave(incoming.driverSeasonStats || {}),
-  };
-  if (!Array.isArray(merged.history)) merged.history = [];
-  if (!Array.isArray(merged.seasonResults)) merged.seasonResults = [];
-  if (!merged.weekend || typeof merged.weekend !== "object") {
-    merged.weekend = deepCloneForSave(fallback.weekend || {});
+  // 如果有加载的状态，优先使用它，不做部分合并
+  // 这确保从任何年份的存档读档时，数据完全恢复
+  if (
+    savedState &&
+    typeof savedState === "object" &&
+    Object.keys(savedState).length > 0
+  ) {
+    const incoming = deepCloneForSave(savedState);
+    // 确保关键数组和对象字段存在
+    if (!Array.isArray(incoming.history)) incoming.history = [];
+    if (!Array.isArray(incoming.seasonResults)) incoming.seasonResults = [];
+    if (
+      !incoming.driverStandings ||
+      typeof incoming.driverStandings !== "object"
+    ) {
+      incoming.driverStandings = {};
+    }
+    if (!incoming.teamStandings || typeof incoming.teamStandings !== "object") {
+      incoming.teamStandings = {};
+    }
+    if (
+      !incoming.driverSeasonStats ||
+      typeof incoming.driverSeasonStats !== "object"
+    ) {
+      incoming.driverSeasonStats = {};
+    }
+    if (!incoming.weekend || typeof incoming.weekend !== "object") {
+      incoming.weekend = {};
+    }
+    return incoming;
   }
-  return merged;
+  // 如果没有加载状态，使用备用状态
+  const fallback = deepCloneForSave(fallbackState || {});
+  if (!Array.isArray(fallback.history)) fallback.history = [];
+  if (!Array.isArray(fallback.seasonResults)) fallback.seasonResults = [];
+  if (
+    !fallback.driverStandings ||
+    typeof fallback.driverStandings !== "object"
+  ) {
+    fallback.driverStandings = {};
+  }
+  if (!fallback.teamStandings || typeof fallback.teamStandings !== "object") {
+    fallback.teamStandings = {};
+  }
+  if (
+    !fallback.driverSeasonStats ||
+    typeof fallback.driverSeasonStats !== "object"
+  ) {
+    fallback.driverSeasonStats = {};
+  }
+  if (!fallback.weekend || typeof fallback.weekend !== "object") {
+    fallback.weekend = {};
+  }
+  return fallback;
 }
 function snapshot() {
+  // 确保所有关键字段在保存前存在并有效
+  if (!state.driverStandings) state.driverStandings = {};
+  if (!state.teamStandings) state.teamStandings = {};
+  if (!state.driverSeasonStats) state.driverSeasonStats = {};
+  if (!state.history) state.history = [];
+  if (!state.seasonResults) state.seasonResults = [];
   return {
     version: 9,
     savedAt: new Date().toISOString(),
@@ -2941,9 +2977,12 @@ function restoreSnapshot(data) {
   selected = d;
   Object.keys(teams).forEach((k) => delete teams[k]);
   Object.assign(teams, deepCloneForSave(data.teams || baseTeams));
-  state = normalizeLoadedState(data.state, state);
+  // 完全用加载的状态替换当前状态，确保跨年份读档时数据完整恢复
+  state = normalizeLoadedState(data.state);
+  // 只在必要时补充关键关系数据
   if (!state.driverRelations || !Object.keys(state.driverRelations).length)
     state.driverRelations = buildInitialDriverRelations(selected[0]);
+  ensureStateV11();
   ensurePrep();
   renderProfile();
   renderHub();
@@ -4875,6 +4914,12 @@ function showSeasonFinaleV10() {
 
 snapshot = function () {
   ensureStateV10();
+  // 确保所有关键字段在保存前存在并有效
+  if (!state.driverStandings) state.driverStandings = {};
+  if (!state.teamStandings) state.teamStandings = {};
+  if (!state.driverSeasonStats) state.driverSeasonStats = {};
+  if (!state.history) state.history = [];
+  if (!state.seasonResults) state.seasonResults = [];
   return {
     version: 10,
     savedAt: new Date().toISOString(),
@@ -4897,7 +4942,7 @@ restoreSnapshot = function (data) {
       if (data.teams[k]?.parts?.["动力单元"] != null) teams[k] = data.teams[k];
     });
   }
-  state = normalizeLoadedState(data.state, state);
+  state = normalizeLoadedState(data.state);
   if (!state.weekend) resetWeekend();
   ensureStateV10();
   renderProfile();
@@ -6333,7 +6378,7 @@ restoreSnapshot = function (data) {
       }
     });
   }
-  state = normalizeLoadedState(data.state, state);
+  state = normalizeLoadedState(data.state);
   if (!state.weekend) resetWeekend();
   ensureStateV11();
   if ((data.version || 0) < 11) {
