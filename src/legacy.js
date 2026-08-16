@@ -29,8 +29,6 @@
  *
  * 统计信息：
  * - 总车手数: 22人 (11支车队，每队2人)
- * - 新秀: Isack Hadjar, Kimi Antonelli, Franco Colapinto, Gabriel Bortoleto, Arvid Lindblad
- * - 传奇: Lewis Hamilton (转投Ferrari)
  */
 const drivers = [
   // Red Bull Racing - 红牛车队 (总体OVR: 66)
