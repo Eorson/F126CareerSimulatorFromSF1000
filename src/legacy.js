@@ -26,11 +26,6 @@
  * 2026赛季驾驶员列表
  * 数据结构: [姓名, 车队, 综合评分, 经验, 技巧, 意识, 速度]
  * 评分范围: 0-100
- *
- * 统计信息：
- * - 总车手数: 22人 (11支车队，每队2人)
- * - 新秀: Isack Hadjar, Kimi Antonelli, Franco Colapinto, Gabriel Bortoleto, Arvid Lindblad
- * - 传奇: Lewis Hamilton (转投Ferrari)
  */
 const drivers = [
   // Red Bull Racing - 红牛车队 (总体OVR: 66)
@@ -2932,28 +2927,30 @@ function normalizeLoadedState(savedState, fallbackState = {}) {
     return incoming;
   }
   // 如果没有加载状态，使用备用状态
+  const incoming = deepCloneForSave(savedState || {});
   const fallback = deepCloneForSave(fallbackState || {});
-  if (!Array.isArray(fallback.history)) fallback.history = [];
-  if (!Array.isArray(fallback.seasonResults)) fallback.seasonResults = [];
-  if (
-    !fallback.driverStandings ||
-    typeof fallback.driverStandings !== "object"
-  ) {
-    fallback.driverStandings = {};
+  const merged = {
+    ...fallback,
+    ...incoming,
+  };
+  merged.driverStandings = {
+    ...deepCloneForSave(fallback.driverStandings || {}),
+    ...deepCloneForSave(incoming.driverStandings || {}),
+  };
+  merged.teamStandings = {
+    ...deepCloneForSave(fallback.teamStandings || {}),
+    ...deepCloneForSave(incoming.teamStandings || {}),
+  };
+  merged.driverSeasonStats = {
+    ...deepCloneForSave(fallback.driverSeasonStats || {}),
+    ...deepCloneForSave(incoming.driverSeasonStats || {}),
+  };
+  if (!Array.isArray(merged.history)) merged.history = [];
+  if (!Array.isArray(merged.seasonResults)) merged.seasonResults = [];
+  if (!merged.weekend || typeof merged.weekend !== "object") {
+    merged.weekend = deepCloneForSave(fallback.weekend || {});
   }
-  if (!fallback.teamStandings || typeof fallback.teamStandings !== "object") {
-    fallback.teamStandings = {};
-  }
-  if (
-    !fallback.driverSeasonStats ||
-    typeof fallback.driverSeasonStats !== "object"
-  ) {
-    fallback.driverSeasonStats = {};
-  }
-  if (!fallback.weekend || typeof fallback.weekend !== "object") {
-    fallback.weekend = {};
-  }
-  return fallback;
+  return merged;
 }
 function snapshot() {
   // 确保所有关键字段在保存前存在并有效
@@ -29753,69 +29750,4 @@ setTimeout(() => {
   try {
     snapshot = window.snapshot;
   } catch (_) {}
-})();
-
-/* ================================
- * 存档系统修复 v1.1
- * 目的：
- * 1. 避免 2028 年以后 localStorage 因存档体积过大失败
- * 2. 区分真实浏览器权限错误与存储空间错误
- * 3. 不修改比赛、积分、研发等核心逻辑
- * ================================ */
-(function () {
-  function buildCompactSaveSnapshot() {
-    const raw = snapshot();
-    const clone = JSON.parse(JSON.stringify(raw));
-
-    // 删除运行时缓存，不影响读取存档后的重新计算
-    const cleanObject = (obj) => {
-      if (!obj || typeof obj !== "object") return;
-      const removeKeys = [
-        "renderCache",
-        "simulationCache",
-        "runtimeCache",
-        "tempCache",
-        "uiCache",
-        "previewCache",
-      ];
-      removeKeys.forEach((k) => {
-        if (k in obj) delete obj[k];
-      });
-      Object.values(obj).forEach((v) => cleanObject(v));
-    };
-
-    cleanObject(clone);
-    return clone;
-  }
-
-  function saveToLocalStorageSafe(key, data) {
-    try {
-      const text = JSON.stringify(data);
-      localStorage.setItem(key, text);
-      return true;
-    } catch (e) {
-      console.error("本地存档失败:", e);
-      if (e && e.name === "QuotaExceededError") {
-        alert("存档失败：浏览器本地存储空间不足，请删除旧存档后重试。");
-      } else {
-        alert("存档失败：" + (e.message || e));
-      }
-      return false;
-    }
-  }
-
-  // 覆盖保存入口，保持原函数调用方式
-  window.saveSlot = function (n) {
-    return saveToLocalStorageSafe(
-      SAVE_PREFIX + "slot" + n,
-      buildCompactSaveSnapshot(),
-    );
-  };
-
-  window.autosave = function () {
-    return saveToLocalStorageSafe(
-      SAVE_PREFIX + "autosave",
-      buildCompactSaveSnapshot(),
-    );
-  };
 })();
