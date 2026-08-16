@@ -2955,6 +2955,30 @@ function normalizeLoadedState(savedState, fallbackState = {}) {
   }
   return fallback;
 }
+
+// ================================
+// v2.4 存档体积优化兼容层
+// 说明：不删除历史数据，仅在保存当前生涯时移除重复的大型历史快照。
+// 历史数据仍保留在运行内存中，后续版本可接入独立历史库。
+// ================================
+function prepareStateForSaveV24(source) {
+  const cloned = deepCloneForSave(source || {});
+  // 大型历史模块不再重复塞入每一个生涯存档副本
+  // 这些数据主要用于历史查询，不影响当前赛季推进
+  delete cloned.seasonArchiveV13284;
+  delete cloned.standingsTimelineV40;
+  delete cloned.aiStrategyHistoryV41317;
+  return cloned;
+}
+
+function restoreHistoryCompatibilityV24(target) {
+  if (!target) return target;
+  if (!target.seasonArchiveV13284) target.seasonArchiveV13284 = {};
+  if (!target.standingsTimelineV40) target.standingsTimelineV40 = {};
+  if (!target.aiStrategyHistoryV41317) target.aiStrategyHistoryV41317 = [];
+  return target;
+}
+
 function snapshot() {
   // 确保所有关键字段在保存前存在并有效
   if (!state.driverStandings) state.driverStandings = {};
@@ -2962,15 +2986,21 @@ function snapshot() {
   if (!state.driverSeasonStats) state.driverSeasonStats = {};
   if (!state.history) state.history = [];
   if (!state.seasonResults) state.seasonResults = [];
+  if (!state.marketOffersV15) state.marketOffersV15 = [];
+  if (state.marketOfferRoundV15 == null) state.marketOfferRoundV15 = 0;
   return {
     version: 9,
     savedAt: new Date().toISOString(),
     selected: selected ? selected[0] : null,
-    state: deepCloneForSave(state),
+    state: prepareStateForSaveV24(state),
     teams: deepCloneForSave(teams),
   };
 }
 function restoreSnapshot(data) {
+  // v2.4 旧存档字段补全
+  if (data && data.state && !data.state.marketOffersV15) {
+    data.state.marketOffersV15 = [];
+  }
   if (!data || !data.selected) return false;
   const d = drivers.find((x) => x[0] === data.selected);
   if (!d) return false;
@@ -2978,7 +3008,11 @@ function restoreSnapshot(data) {
   Object.keys(teams).forEach((k) => delete teams[k]);
   Object.assign(teams, deepCloneForSave(data.teams || baseTeams));
   // 完全用加载的状态替换当前状态，确保跨年份读档时数据完整恢复
-  state = normalizeLoadedState(data.state);
+  state = restoreHistoryCompatibilityV24(normalizeLoadedState(data.state));
+  state = restoreHistoryArchiveV25(state);
+  // 旧存档兼容：补齐后续版本新增字段
+  if (!Array.isArray(state.marketOffersV15)) state.marketOffersV15 = [];
+  if (state.marketOfferRoundV15 == null) state.marketOfferRoundV15 = 0;
   // 只在必要时补充关键关系数据
   if (!state.driverRelations || !Object.keys(state.driverRelations).length)
     state.driverRelations = buildInitialDriverRelations(selected[0]);
@@ -2988,20 +3022,103 @@ function restoreSnapshot(data) {
   renderHub();
   return true;
 }
+function analyzeSaveSizeV22(label, data) {
+  try {
+    const json = JSON.stringify(data);
+    console.log(
+      "[v2.3 Save Analyzer]",
+      label,
+      Math.round(json.length / 1024) + "KB",
+    );
+    if (data && data.state) {
+      const result = {};
+      Object.keys(data.state).forEach((k) => {
+        try {
+          result[k] = Math.round(JSON.stringify(data.state[k]).length / 1024);
+        } catch (e) {}
+      });
+      console.table(
+        Object.entries(result)
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 10)
+          .map((x) => ({ field: x[0], KB: x[1] })),
+      );
+    }
+  } catch (e) {}
+}
+
+// v2.5 历史数据分离：历史记录不再重复进入每个生涯存档
+function saveHistoryArchiveV25(sourceState) {
+  try {
+    const history = {
+      seasonArchiveV13284: sourceState.seasonArchiveV13284 || [],
+      standingsTimelineV40: sourceState.standingsTimelineV40 || [],
+      aiStrategyHistoryV41317: sourceState.aiStrategyHistoryV41317 || [],
+    };
+    localStorage.setItem(
+      SAVE_PREFIX + "historyArchiveV25",
+      JSON.stringify(history),
+    );
+  } catch (e) {
+    console.warn("v2.5 历史数据保存失败:", e);
+  }
+}
+
+function restoreHistoryArchiveV25(targetState) {
+  try {
+    const raw = localStorage.getItem(SAVE_PREFIX + "historyArchiveV25");
+    if (!raw) return targetState;
+    const history = JSON.parse(raw);
+    if (!targetState.seasonArchiveV13284)
+      targetState.seasonArchiveV13284 = history.seasonArchiveV13284 || [];
+    if (!targetState.standingsTimelineV40)
+      targetState.standingsTimelineV40 = history.standingsTimelineV40 || [];
+    if (!targetState.aiStrategyHistoryV41317)
+      targetState.aiStrategyHistoryV41317 =
+        history.aiStrategyHistoryV41317 || [];
+  } catch (e) {
+    console.warn("v2.5 历史数据恢复失败:", e);
+  }
+  return targetState;
+}
+
+function createCompactSnapshotV25() {
+  const data = snapshot();
+  const s = data.state || {};
+  saveHistoryArchiveV25(s);
+
+  // 历史模块独立保存，当前存档只保存当前生涯运行需要的数据
+  delete s.seasonArchiveV13284;
+  delete s.standingsTimelineV40;
+  delete s.aiStrategyHistoryV41317;
+
+  data.state = s;
+  return data;
+}
+function createUnifiedSaveSnapshotV22() {
+  const data = createCompactSnapshotV25();
+  analyzeSaveSizeV22("v2.5 compact snapshot", data);
+  return data;
+}
+
 function autosave() {
   if (!selected) return;
   try {
-    localStorage.setItem(SAVE_PREFIX + "autosave", JSON.stringify(snapshot()));
+    const data = createUnifiedSaveSnapshotV22();
+    localStorage.setItem(SAVE_PREFIX + "autosave", JSON.stringify(data));
     updateResumeButton();
-  } catch (e) {}
+  } catch (e) {
+    console.error("自动存档失败:", e);
+  }
 }
 function quickSave() {
   if (!selected) return;
   try {
-    localStorage.setItem(SAVE_PREFIX + "slot1", JSON.stringify(snapshot()));
-    autosave();
+    const data = createUnifiedSaveSnapshotV22();
+    localStorage.setItem(SAVE_PREFIX + "slot1", JSON.stringify(data));
     alert("已保存到存档槽 1。");
   } catch (e) {
+    console.error("快速存档失败:", e);
     alert("浏览器未允许本地存档。");
   }
 }
@@ -3011,8 +3128,9 @@ function saveSlot(n) {
     return;
   }
   try {
-    localStorage.setItem(SAVE_PREFIX + "slot" + n, JSON.stringify(snapshot()));
-    autosave();
+    const data = createUnifiedSaveSnapshotV22();
+    localStorage.setItem(SAVE_PREFIX + "slot" + n, JSON.stringify(data));
+    // 手动存档成功后不强制复制一份 autosave，避免大存档瞬间占用翻倍
     openSaveManager("save");
   } catch (e) {
     alert("浏览器未允许本地存档。");
@@ -3028,7 +3146,7 @@ function loadSlot(n) {
     if (restoreSnapshot(JSON.parse(raw))) {
       closeOverlay();
       showView("career");
-      autosave();
+      // 读取存档后不立即强制自动保存，避免大存档读取瞬间产生第二份副本
     }
   } catch (e) {
     alert("存档读取失败。");
@@ -4920,6 +5038,8 @@ snapshot = function () {
   if (!state.driverSeasonStats) state.driverSeasonStats = {};
   if (!state.history) state.history = [];
   if (!state.seasonResults) state.seasonResults = [];
+  if (!state.marketOffersV15) state.marketOffersV15 = [];
+  if (state.marketOfferRoundV15 == null) state.marketOfferRoundV15 = 0;
   return {
     version: 10,
     savedAt: new Date().toISOString(),
@@ -29753,69 +29873,4 @@ setTimeout(() => {
   try {
     snapshot = window.snapshot;
   } catch (_) {}
-})();
-
-/* ================================
- * 存档系统修复 v1.1
- * 目的：
- * 1. 避免 2028 年以后 localStorage 因存档体积过大失败
- * 2. 区分真实浏览器权限错误与存储空间错误
- * 3. 不修改比赛、积分、研发等核心逻辑
- * ================================ */
-(function () {
-  function buildCompactSaveSnapshot() {
-    const raw = snapshot();
-    const clone = JSON.parse(JSON.stringify(raw));
-
-    // 删除运行时缓存，不影响读取存档后的重新计算
-    const cleanObject = (obj) => {
-      if (!obj || typeof obj !== "object") return;
-      const removeKeys = [
-        "renderCache",
-        "simulationCache",
-        "runtimeCache",
-        "tempCache",
-        "uiCache",
-        "previewCache",
-      ];
-      removeKeys.forEach((k) => {
-        if (k in obj) delete obj[k];
-      });
-      Object.values(obj).forEach((v) => cleanObject(v));
-    };
-
-    cleanObject(clone);
-    return clone;
-  }
-
-  function saveToLocalStorageSafe(key, data) {
-    try {
-      const text = JSON.stringify(data);
-      localStorage.setItem(key, text);
-      return true;
-    } catch (e) {
-      console.error("本地存档失败:", e);
-      if (e && e.name === "QuotaExceededError") {
-        alert("存档失败：浏览器本地存储空间不足，请删除旧存档后重试。");
-      } else {
-        alert("存档失败：" + (e.message || e));
-      }
-      return false;
-    }
-  }
-
-  // 覆盖保存入口，保持原函数调用方式
-  window.saveSlot = function (n) {
-    return saveToLocalStorageSafe(
-      SAVE_PREFIX + "slot" + n,
-      buildCompactSaveSnapshot(),
-    );
-  };
-
-  window.autosave = function () {
-    return saveToLocalStorageSafe(
-      SAVE_PREFIX + "autosave",
-      buildCompactSaveSnapshot(),
-    );
-  };
 })();
